@@ -1,0 +1,4 @@
+:root {
+  /** 内容容器宽度 */
+  --content-width: min(800px, 70%);
+}

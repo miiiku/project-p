@@ -1,0 +1,57 @@
+---
+import LogoSvg from "./LogoSvg.astro";
+import ThemeBtn from "./ThemeBtn.astro";
+
+const currentPath = Astro.url.pathname;
+
+const hasActiveNavClass = (path: string) => {
+  return path === currentPath ? "active" : "";
+};
+---
+
+<nav class="navbar-container">
+  <div>
+    <LogoSvg />
+  </div>
+
+  <ul class="flex gap-2">
+    <li>
+      <a class="navbar-item" href="/" class:list={hasActiveNavClass("/")}>
+        <span>Hot</span>
+        <span>🔥</span>
+      </a>
+    </li>
+    <li>
+      <a
+        class="navbar-item"
+        href="/latest"
+        class:list={hasActiveNavClass("/latest")}
+      >
+        <span>Latest</span>
+        <span>🕙</span>
+      </a>
+    </li>
+    <li>
+      <a
+        class="navbar-item"
+        href="/album"
+        class:list={hasActiveNavClass("/album")}
+      >
+        <span>Album</span>
+        <span>📷</span>
+      </a>
+    </li>
+    <li>
+      <a
+        class="navbar-item"
+        href="/about"
+        class:list={hasActiveNavClass("/about")}
+      >
+        <span>About</span>
+        <span>🧑‍🎓</span>
+      </a>
+    </li>
+  </ul>
+
+  <ThemeBtn class="relative cursor-pointer size-6" />
+</nav>

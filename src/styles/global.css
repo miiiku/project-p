@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer components {
+  .navbar-container {
+    @apply flex items-center gap-4 px-4 py-2 rounded-xl text-sm font-medium backdrop-blur-sm ring-1 shadow-lg select-none;
+    @apply bg-white/90 dark:bg-zinc-800/90;
+    @apply text-zinc-800 dark:text-zinc-200;
+    @apply ring-zinc-900/10 dark:ring-zinc-100/10;
+    @apply shadow-zinc-800/5 dark:shadow-zinc-400/5;
+  }
+
+  .navbar-item {
+    @apply flex items-center gap-2 px-4 py-2 transition;
+    @apply hover:text-teal-500 dark:hover:text-teal-400;
+
+    &.active {
+      @apply rounded-xl shadow ring-1;
+      @apply text-teal-500 dark:text-teal-400;
+      @apply ring-zinc-800/10 dark:ring-zinc-50/10;
+      @apply dark:shadow-zinc-950;
+    }
+  }
+}
+
+.test123 {
+  background: white;
+
+  @variant dark {
+    background: black;
+  }
+}

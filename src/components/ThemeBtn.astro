@@ -1,0 +1,184 @@
+<theme-button> </theme-button>
+
+<script>
+  class ThemeButton extends HTMLElement {
+    constructor() {
+      super();
+
+      this.shadowRoot = this.attachShadow({ mode: "open" });
+
+      this.themeAutoIcon = this._createIcon(`
+        <path d="M489.957 63.359c12.499-12.484 32.75-12.478 45.24 0.014L638.217 166.39h188.393c17.496 0 31.713 14.043 31.995 31.472l0.005 0.529-0.001 188.391 103.02 103.02c12.366 12.367 12.496 32.338 0.384 44.864l-0.37 0.377-103.034 103.161v188.405c0 17.496-14.041 31.713-31.47 31.995l-0.53 0.005-188.391-0.001-103.02 103.02c-12.366 12.366-32.337 12.496-44.863 0.384l-0.377-0.37-103.161-103.034H198.39c-17.496 0-31.713-14.041-31.995-31.47l-0.005-0.53V638.205L63.358 535.043c-12.358-12.374-12.476-32.345-0.356-44.864l0.37-0.377L166.39 386.783V198.391c0-17.497 14.042-31.713 31.471-31.996l0.53-0.004 188.406-0.001z m22.599 67.881l-89.902 89.792a32 32 0 0 1-22.614 9.359l-169.65-0.001v169.648a32 32 0 0 1-9.015 22.265l-0.357 0.363-89.778 89.777 89.792 89.905a32 32 0 0 1 9.354 22.105l0.004 0.509v169.646h169.65a32 32 0 0 1 22.251 9.003l0.363 0.356 89.902 89.792 89.778-89.778a32 32 0 0 1 22.119-9.368l0.509-0.004 169.646-0.001V624.962a32 32 0 0 1 9.003-22.251l0.356-0.363 89.792-89.904-89.778-89.778a32 32 0 0 1-9.368-22.119l-0.004-0.509-0.001-169.648H624.962a32 32 0 0 1-22.265-9.015l-0.363-0.357-89.778-89.778z m63.919 199.985c58.927 0 110.005 57.525 128.34 130.864 8.972 35.89 9.325 73.201-0.002 107.464-10.55 38.754-33.002 72.148-66.867 96.777-63.46 46.152-138.441 52.93-203.455 24.816-60.736-26.264-103.266-79.785-103.266-135.996 0-17.673 14.327-32 32-32 59.9 0 100.232-7.529 128.859-26.613 15.955-10.637 28.15-25.02 36.87-44.452 5.432-12.108 9.51-26.181 12.12-42.36l0.305-1.952a248.572 248.572 0 0 0 1.538-12.136l0.206-2.095c0.498-5.262 0.86-10.717 1.083-16.37l0.082-2.272c0.062-1.901 0.109-3.825 0.14-5.77l0.03-2.347c0.011-1.178 0.017-2.364 0.017-3.558 0-17.673 14.327-32 32-32z m29.243 78.327l-0.216 1.7c-8.433 63.962-34.727 109.742-77.917 138.536-22.798 15.199-49.448 25.083-80.185 30.821-13.305 2.484-27.188 4.179-42.14 5.22l-0.839 0.056 0.195 0.334c10.625 17.996 29.677 34.842 54.11 45.673l1.167 0.512c44.676 19.319 95.664 14.71 140.41-17.834 21.86-15.897 35.965-36.876 42.758-61.828 6.326-23.239 6.078-49.48-0.335-75.13-7.329-29.314-21.53-53.521-36.883-67.944l-0.125-0.116z" fill="currentColor" stroke="currentColor" stroke-width="20" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+      `);
+
+      this.themeDarkIcon = this._createIcon(`
+        <path d="M853.824 512c0 195.84-160.224 356.064-356.064 356.064-148.352 0-274.976-91.008-328.384-217.6h11.872c195.84 0 356.064-160.224 356.064-356.064a360.64 360.64 0 0 0-27.68-138.464c191.872 5.92 344.192 164.192 344.192 356.064zM509.632 76.8c-25.728 0-49.44 11.872-65.28 33.632s-17.792 51.424-7.904 75.168c13.856 35.616 21.76 71.2 21.76 108.8 0 152.32-124.64 276.96-276.96 276.96h-11.872c-25.728 0-49.44 11.872-65.28 33.632s-17.792 51.424-7.904 75.168C165.44 842.368 321.696 947.2 497.76 947.2c239.36 0 435.2-195.84 435.2-435.2A433.664 433.664 0 0 0 511.616 76.8h-1.984z" fill="currentColor" stroke="currentColor" stroke-width="20" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+      `);
+
+      this.themeLightIcon = this._createIcon(`
+        <path d="M512 842.66666656q-90.66666656 0-167.46666656-45.86666625-75.73333313-43.73333344-119.46666656-119.46666656-45.86666625-76.8-45.86666719-167.4666675t45.86666718-167.46666656q43.73333344-75.73333313 119.46666657-119.46666656 76.8-45.86666625 167.46666656-45.86666625t167.46666656 45.86666625q75.73333313 43.73333344 119.46666656 119.46666656 45.86666625 76.8 45.86666719 167.46666656t-45.86666718 167.4666675q-43.73333344 75.73333313-119.46666657 119.46666656-76.8 45.86666625-167.46666656 45.86666625z m0-68.26666687q71.46666656 0 132.26666625-35.73333281t96.53333344-96.53333344Q776.53333344 581.33333375 776.53333344 509.86666625t-35.73333375-132.26666625Q705.06666688 316.80000031 644.26666625 281.06666656T512 245.33333375q-71.46666656 0-132.26666625 35.73333281T283.20000031 377.6Q247.46666656 438.39999969 247.46666656 509.86666625t35.73333375 132.26666719q35.73333375 60.79999969 96.53333344 96.53333344T512 774.39999969z m0-742.39999969q13.86666656 0 24 10.13333344T546.13333344 66.13333344v54.40000031q0 13.86666656-10.13333344 24T512 154.66666625q-13.86666656 0-24-10.1333325T477.86666656 120.53333375v-54.40000031q0-13.86666656 10.13333344-24T512 32z m0 837.33333375q13.86666656 0 24 10.1333325T546.13333344 903.46666625v54.40000031q0 13.86666656-10.13333344 24T512 992q-13.86666656 0-24-10.13333344T477.86666656 957.86666656v-54.40000031q0-13.86666656 10.13333344-24T512 869.33333375z m347.73333375-11.73333375q-9.6 9.6-24 9.6t-24-9.6l-38.4-38.4q-10.66666687-9.6-10.66666687-24t10.13333343-24.53333344q10.13333344-10.13333344 24.53333344-10.13333343t24 10.66666687l38.4 38.4q9.6 9.6 9.6 24t-9.6 24zM253.86666688 254.93333375q-9.6 9.6-24.00000001 9.6t-24-9.6l-38.4-38.4q-10.66666687-9.6-10.66666687-24t10.13333344-24.53333344q10.13333344-10.13333344 24.53333344-10.13333344T215.46666688 168.53333375l38.4 38.4q9.6 9.6 9.6 24t-9.6 24z m598.39999968-86.4q9.6 9.6 9.6 24t-9.6 24l-38.4 38.4q-9.6 9.6-24 9.6t-24.53333343-9.6q-10.13333344-9.6-10.13333344-24T765.86666656 206.93333375l38.4-38.4q9.6-10.66666687 24-10.66666687T852.26666656 168.53333375zM250.66666625 771.2q10.66666687 9.6 10.66666687 24T250.66666625 819.2l-38.4 38.4q-9.6 9.6-24 9.6t-24-9.6q-9.6-9.6-9.6-24t9.6-24l38.4-38.4q9.6-10.66666687 24-10.66666687t24 10.66666687z m739.2-261.33333375q0 13.86666656-10.1333325 24T955.73333375 543.99999969h-54.40000031q-13.86666656 0-24-10.13333344T867.2 509.86666625q0-13.86666656 10.13333344-24T901.33333344 475.73333375h54.40000031q13.86666656 0 24 10.1333325T989.86666625 509.86666625z m-833.06666625 0q0 13.86666656-10.13333344 24T122.66666656 543.99999969H68.26666625q-13.86666656 0-24-10.13333344T34.13333375 509.86666625q0-13.86666656 10.1333325-24T68.26666625 475.73333375h54.40000031q13.86666656 0 24 10.1333325T156.8 509.86666625z" fill="currentColor" stroke="currentColor" stroke-width="20" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+      `);
+    }
+
+    /**
+     *
+     */
+    className = "theme-button";
+
+    /**
+     * The key of the theme in the localStorage.
+     */
+    themeKey = "p-d-theme";
+
+    /**
+     * The current theme.
+     */
+    theme = "auto";
+
+    /**
+     * The icon of the theme when the user turns on the auto.
+     */
+    themeAutoIcon: SVGSVGElement;
+
+    /**
+     * The icon of the theme when the user turns on the dark.
+     */
+    themeDarkIcon: SVGSVGElement;
+
+    /**
+     * The icon of the theme when the user turns on the light.
+     */
+    themeLightIcon: SVGSVGElement;
+
+    /**
+     * The shadow root of the element.
+     */
+    shadowRoot: ShadowRoot;
+
+    _createIcon(html: string) {
+      const svgIcon = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "svg"
+      );
+      svgIcon.classList.add("theme-icon");
+      svgIcon.setAttribute("width", "24");
+      svgIcon.setAttribute("height", "24");
+      svgIcon.setAttribute("viewBox", "0 0 1024 1024");
+      svgIcon.setAttribute("fill", "none");
+      svgIcon.innerHTML = html;
+      return svgIcon;
+    }
+
+    _createStyle() {
+      const sheet = new CSSStyleSheet();
+      sheet.replaceSync(`
+        .theme-icon {
+          position: absolute;
+          inset: 0;
+          opacity: 0;
+        }
+
+        .theme-icon.init {
+          opacity: 1;
+        }
+
+        .theme-icon[data-run="in"] {
+          animation: in 0.3s ease-in-out forwards;
+        }
+
+        .theme-icon[data-run="out"] {
+          animation: out 0.3s ease-in-out forwards;
+        }
+
+        @keyframes in {
+          from {
+            opacity: 0;
+            transform: translate3d(-100%, 0, 0);
+          }
+
+          to {
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
+          }
+        }
+
+        @keyframes out {
+          from {
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
+          }
+
+          to {
+            opacity: 0;
+            transform: translate3d(100%, 0, 0);
+          }
+        }
+      `);
+      return sheet;
+    }
+
+    setTheme(theme: "auto" | "light" | "dark", isInit = false) {
+      this.theme = theme;
+      this.dataset.theme = theme;
+
+      window.localStorage.setItem(this.themeKey, theme);
+      document.documentElement.classList.toggle("dark", theme === "dark");
+
+      if (isInit) {
+        this.themeAutoIcon.classList.toggle("init", theme === "auto");
+        this.themeLightIcon.classList.toggle("init", theme === "light");
+        this.themeDarkIcon.classList.toggle("init", theme === "dark");
+        return;
+      }
+
+      switch (theme) {
+        case "auto":
+          this.themeDarkIcon.dataset.run = "out";
+          this.themeAutoIcon.dataset.run = "in";
+          break;
+        case "light":
+          this.themeAutoIcon.dataset.run = "out";
+          this.themeLightIcon.dataset.run = "in";
+          break;
+        case "dark":
+          this.themeLightIcon.dataset.run = "out";
+          this.themeDarkIcon.dataset.run = "in";
+          break;
+      }
+    }
+
+    connectedCallback() {
+      const theme = (window.localStorage.getItem(this.themeKey) || "auto") as
+        | "auto"
+        | "light"
+        | "dark";
+
+      this.style.position = "relative";
+      this.style.cursor = "pointer";
+      this.style.width = "24px";
+      this.style.height = "24px";
+      this.shadowRoot.adoptedStyleSheets = [this._createStyle()];
+      this.shadowRoot.appendChild(this.themeAutoIcon);
+      this.shadowRoot.appendChild(this.themeLightIcon);
+      this.shadowRoot.appendChild(this.themeDarkIcon);
+
+      this.setTheme(theme, true);
+
+      this.addEventListener("click", () => {
+        switch (this.theme) {
+          case "auto":
+            this.setTheme("light");
+            break;
+          case "light":
+            this.setTheme("dark");
+            break;
+          case "dark":
+            this.setTheme("auto");
+            break;
+        }
+      });
+    }
+  }
+
+  customElements.define("theme-button", ThemeButton);
+</script>
