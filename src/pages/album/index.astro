@@ -1,10 +1,41 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const topAlbums = [
+  {
+    name: "夜太黑 🔥",
+    desc: "滚石唱片空间音频系列",
+    cover:
+      "https://cdn.midjourney.com/d37acca6-eb52-4312-8ccc-b95bb8fa0b88/0_0.jpeg",
+  },
+  {
+    name: "近期更新 ⏰",
+    desc: "社交网络上的前沿之声",
+    cover:
+      "https://cdn.midjourney.com/45666f11-ff21-483a-b00f-11e311e6c279/0_0.jpeg",
+  },
+];
 ---
 
 <Layout>
-  <div class="max-w-8/10 mx-auto bg-amber-50 p-4 rounded">123</div>
+  <div class="w-(--content-width) mx-auto py-8 px-4 rounded bg-stone-800/5">
+    <div class="overflow-x-auto">
+      <div class="flex gap-6">
+        {
+          topAlbums.map((album) => (
+            <section class="shrink-0 flex-1">
+              <h4 class="font-bold">{album.name}</h4>
+              <div class="mt-1 mb-2 text-sm text-zinc-600">{album.desc}</div>
+              <div class="bg-amber-200 aspect-video rounded overflow-hidden">
+                <img
+                  class="block w-full h-full object-cover"
+                  src={album.cover}
+                />
+              </div>
+            </section>
+          ))
+        }
+      </div>
+    </div>
+  </div>
 </Layout>

@@ -23,11 +23,3 @@
     }
   }
 }
-
-.test123 {
-  background: white;
-
-  @variant dark {
-    background: black;
-  }
-}

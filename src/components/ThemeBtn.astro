@@ -121,8 +121,9 @@
       this.theme = theme;
       this.dataset.theme = theme;
 
-      window.localStorage.setItem(this.themeKey, theme);
       document.documentElement.classList.toggle("dark", theme === "dark");
+      document.documentElement.classList.toggle("light", theme === "light");
+      window.localStorage.setItem(this.themeKey, theme);
 
       if (isInit) {
         this.themeAutoIcon.classList.toggle("init", theme === "auto");
