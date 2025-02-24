@@ -22,4 +22,30 @@
       @apply dark:shadow-zinc-950;
     }
   }
+
+  .svg-background-image {
+    --light-a-1: #3245ff;
+    --light-a-2: #bc52ee;
+    --light-b-1: #d83333;
+    --light-b-2: #f041ff;
+
+    --dark-a-1: #00ff9c;
+    --dark-a-2: #72bf78;
+    --dark-b-1: #ffe3e3;
+    --dark-b-2: #d2e0fb;
+
+    --a-1: var(--light-a-1);
+    --a-2: var(--light-a-2);
+    --b-1: var(--light-b-1);
+    --b-2: var(--light-b-2);
+
+    @variant dark {
+      --a-1: var(--dark-a-1);
+      --a-2: var(--dark-a-2);
+      --b-1: var(--dark-b-1);
+      --b-2: var(--dark-b-2);
+    }
+
+    @apply block w-full h-full object-cover dark:bg-zinc-800;
+  }
 }

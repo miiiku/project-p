@@ -1,4 +1,4 @@
 :root {
   /** 内容容器宽度 */
-  --content-width: min(960px, 100%);
+  --content-width: min(1100px, 100%);
 }
