@@ -1,4 +1,12 @@
 :root {
   /** 内容容器宽度 */
   --content-width: min(1660px, 100%);
+  /** 主题容器间距 */
+  --gutter-width: 40px;
+}
+
+.repeating-linear-gradiend-bg {
+  color: color-mix(in oklab, var(--color-gray-950) 50%, transparent);
+  background-size: 10px 10px;
+  background-image: repeating-linear-gradient(315deg, currentColor 0 1px, #0000 0 50%);
 }

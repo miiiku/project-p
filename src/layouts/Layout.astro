@@ -16,13 +16,25 @@ import BackgroundImage from "../components/BackgroundImage.astro";
   </head>
   <body>
     <BackgroundImage />
-    <header class="flex justify-center items-center py-6">
-      <Navbar />
-    </header>
-    <div id="container" class="w-full">
-      <main class="w-full mx-auto pb-6">
-        <slot />
-      </main>
+
+    <div id="app" class="w-full grid grid-cols-[__1fr_var(--gutter-width)_minmax(0,var(--content-width))_var(--gutter-width)_1fr]">
+      <div class="col-start-2 col-end-3 w-full h-full">
+        <div class="size-full border-l border-zinc-200/5 dark:border-zinc-400/5"></div>
+      </div>
+    
+      <div class="col-start-3 col-end-4 pb-6">
+        <header class="flex justify-center items-center py-6">
+          <Navbar />
+        </header>
+        
+        <main>
+          <slot />
+        </main>
+      </div>
+      
+      <div class="col-start-4 col-end-5 w-full h-full">
+        <div class="size-full border-r border-zinc-200/5 dark:border-zinc-400/5"></div>
+      </div>
     </div>
   </body>
 </html>
@@ -35,7 +47,7 @@ import BackgroundImage from "../components/BackgroundImage.astro";
     height: 100%;
   }
 
-  #container {
+  #app {
     font-family: Inter, Roboto, "Helvetica Neue", "Arial Nova", "Nimbus Sans",
       Arial, sans-serif;
   }
