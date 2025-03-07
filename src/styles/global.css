@@ -2,6 +2,42 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@utility line-bl {
+  border-left-style: var(--tw-border-style);
+  border-left-width: 1px;
+  border-color: color-mix(in oklab, var(--color-zinc-700) 5%, transparent);
+
+  @variant dark {
+    border-color: color-mix(in oklab, var(--color-zinc-300) 5%, transparent);
+  }
+}
+
+@utility line-br {
+  border-right-style: var(--tw-border-style);
+  border-right-width: 1px;
+  border-color: color-mix(in oklab, var(--color-zinc-700) 5%, transparent);
+
+  @variant dark {
+    border-color: color-mix(in oklab, var(--color-zinc-300) 5%, transparent);
+  }
+}
+
+@utility line-y {
+  @apply relative text-zinc-700/5 dark:text-zinc-300/5;
+  @apply before:absolute before:left-0 before:z-[-1] before:bg-[currentColor];
+  @apply after:absolute after:right-0 after:z-[-1] after:bg-[currentColor];
+  @apply before:h-[200vw] before:w-[1px] before:translate-y-[-100vw];
+  @apply after:h-[200vw] after:w-[1px] after:translate-y-[-100vw];
+}
+
+@utility line-x {
+  @apply relative text-zinc-700/5 dark:text-zinc-300/5;
+  @apply before:absolute before:top-0 before:z-[-1] before:bg-[currentColor];
+  @apply after:absolute after:bottom-0 after:z-[-1] after:bg-[currentColor];
+  @apply before:h-[1px] before:w-[200vw] before:translate-x-[-100vw];
+  @apply after:h-[1px] after:w-[200vw] after:translate-x-[-100vw];
+}
+
 @layer components {
   .navbar-container {
     @apply flex items-center gap-4 px-4 py-2 rounded-xl text-sm font-medium backdrop-blur-sm ring-1 shadow-lg select-none;

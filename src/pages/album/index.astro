@@ -21,13 +21,13 @@ albums.forEach((album: any) => {
     class="py-8 px-12 rounded bg-stone-800/5 dark:bg-stone-100/5"
   >
     <section class="mb-12">
-      <h3 class="font-bold text-2xl pb-6 dark:text-zinc-200">精选专辑</h3>
+      <h3 class="font-bold text-2xl pb-6 dark:text-zinc-200">Greatest Hits</h3>
       <div class="overflow-hidden">
-        <ul class="grid grid-rows-1 grid-flow-col auto-cols-[calc(50%-12px)] gap-6 overflow-x-scroll scroll-smooth snap-mandatory snap-x">
+        <ul class="grid grid-rows-1 grid-flow-col auto-cols-[100%] md:auto-cols-[calc(50%-12px)] gap-6 overflow-x-scroll scroll-smooth snap-mandatory snap-x">
           {
             stickyAlbums.map((album) => (
               <li class="shrink-0 flex-1 snap-start snap-always">
-                <a href="javascript:;">
+                <a href="#">
                   <h4 class="font-bold dark:text-zinc-200 mb-2">{album.name}</h4>
                   {/*
                   <div class="mt-1 mb-2 text-sm text-zinc-600 truncate dark:text-zinc-400">
@@ -50,13 +50,13 @@ albums.forEach((album: any) => {
     </section>
 
     <section>
-      <h3 class="font-bold text-2xl pb-6 dark:text-zinc-200">最新发布</h3>
+      <h3 class="font-bold text-2xl pb-6 dark:text-zinc-200">Latest Upload</h3>
       <div class="overflow-x-auto">
         <ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {
             otherAlbums.map((album) => (
               <li class="shrink-0 flex-1">
-                <a href="javascript:;" title={album.name}>
+                <a href="#" title={album.name}>
                   <div class="aspect-square rounded-md overflow-hidden">
                     <img
                       class="block w-full h-full object-cover"

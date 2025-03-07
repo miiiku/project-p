@@ -1,6 +1,7 @@
 :root {
   /** 内容容器宽度 */
   --content-width: min(1660px, 100%);
+
   /** 主题容器间距 */
   --gutter-width: 40px;
 }
