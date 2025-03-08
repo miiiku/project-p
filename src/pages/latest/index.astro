@@ -18,23 +18,16 @@ albums.forEach((album: any) => {
 <Layout>
   <div class="line-x py-8">
     <h1 class="text-5xl tracking-tight text-pretty text-zinc-800 dark:text-zinc-200">Latest</h1>
-    <p class="mt-4 text-lg font-medium text-gray-500">
+    <p class="mt-4 text-lg font-medium text-zinc-700 dark:text-zinc-300">
       Heroses, feature sections, newsletter sign up forms -- everything you need to build a website.
     </p>
   </div>
 
   <div class="line-x mt-8">
-    <div class="absolute -z-0 inset-0 pointer-events-none grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      <div class="line-br"></div>
-      <div class="line-bl line-br max-md:hidden"></div>
-      <div class="line-bl line-br max-lg:hidden"></div>
-      <div class="line-bl max-xl:hidden"></div>
-    </div>
-
     <section class="mb-12">
       <h3 class="font-bold text-2xl pb-6 dark:text-zinc-200">Greatest Hits</h3>
       <div class="overflow-hidden">
-        <ul class="grid grid-rows-1 grid-flow-col auto-cols-[100%] md:auto-cols-[calc(50%-12px)] gap-6 overflow-x-scroll scroll-smooth snap-mandatory snap-x">
+        <ul class="grid grid-rows-1 grid-flow-col auto-cols-[100%] md:auto-cols-[calc(50%-12px)] gap-6 scrollbar-hidden overflow-x-scroll scroll-smooth snap-mandatory snap-x">
           {
             stickyAlbums.map((album) => (
               <li class="shrink-0 flex-1 snap-start snap-always">
@@ -62,24 +55,33 @@ albums.forEach((album: any) => {
 
     <section>
       <h3 class="font-bold text-2xl pb-6 dark:text-zinc-200">Latest Upload</h3>
-      <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {
-          otherAlbums.map((album) => (
-          // max-xl:nth-[3n+1]:line-x max-lg:nth-[2n+1]:line-x max-md:line-x
-            <li class="shrink-0 flex-1 nth-[4n+1]:line-x">
-              <a href="#" title={album.name}>
-                <div class="aspect-square rounded-md overflow-hidden">
-                  <img
-                    class="block w-full h-full object-cover"
-                    src={album.cover}
-                    alt={album.name}
-                  />
-                </div>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
+      <div class="relative">
+        <div class="absolute -z-0 inset-0 pointer-events-none grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div class="line-br"></div>
+          <div class="line-bl line-br max-md:hidden"></div>
+          <div class="line-bl line-br max-lg:hidden"></div>
+          <div class="line-bl max-xl:hidden"></div>
+        </div>
+
+        <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 line-y">
+          {
+            otherAlbums.map((album) => (
+            // max-xl:nth-[3n+1]:line-x max-lg:nth-[2n+1]:line-x max-md:line-x
+              <li class="shrink-0 flex-1 p-2 nth-[4n+1]:line-x">
+                <a href="#" title={album.name}>
+                  <div class="aspect-square rounded-md overflow-hidden">
+                    <img
+                      class="block w-full h-full object-cover"
+                      src={album.cover}
+                      alt={album.name}
+                    />
+                  </div>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
     </section>
   </div>
 </Layout>

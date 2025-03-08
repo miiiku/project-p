@@ -2,6 +2,15 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@utility scrollbar-hidden {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    opacity: 0;
+    display: none;
+  }
+}
+
 @utility line-bl {
   border-left-style: var(--tw-border-style);
   border-left-width: 1px;
