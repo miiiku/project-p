@@ -32,7 +32,7 @@
 }
 
 @utility line-y {
-  @apply relative text-zinc-700/5 dark:text-zinc-300/5;
+  @apply relative before:text-zinc-700/5 dark:before:text-zinc-300/5 after:text-zinc-700/5 dark:after:text-zinc-300/5;
   @apply before:absolute before:left-0 before:z-[-1] before:bg-[currentColor];
   @apply after:absolute after:right-0 after:z-[-1] after:bg-[currentColor];
   @apply before:h-[200vw] before:w-[1px] before:translate-y-[-100vw];
@@ -40,7 +40,7 @@
 }
 
 @utility line-x {
-  @apply relative text-zinc-700/5 dark:text-zinc-300/5;
+  @apply relative before:text-zinc-700/5 dark:before:text-zinc-300/5 after:text-zinc-700/5 dark:after:text-zinc-300/5;
   @apply before:absolute before:top-0 before:z-[-1] before:bg-[currentColor];
   @apply after:absolute after:bottom-0 after:z-[-1] after:bg-[currentColor];
   @apply before:h-[1px] before:w-[200vw] before:translate-x-[-100vw];
@@ -48,26 +48,8 @@
 }
 
 @layer components {
-  .navbar-container {
-    @apply flex items-center gap-4 px-4 py-2 rounded-xl text-sm font-medium backdrop-blur-sm ring-1 shadow-lg select-none;
-    @apply bg-white/90 dark:bg-zinc-800/90;
-    @apply text-zinc-800 dark:text-zinc-200;
-    @apply ring-zinc-900/10 dark:ring-zinc-100/10;
-    @apply shadow-zinc-800/5 dark:shadow-zinc-400/5;
-  }
 
-  .navbar-item {
-    @apply flex items-center gap-2 px-4 py-2 transition;
-    @apply hover:text-teal-500 dark:hover:text-teal-400;
-
-    &.active {
-      @apply rounded-xl shadow ring-1;
-      @apply text-teal-500 dark:text-teal-400;
-      @apply ring-zinc-800/10 dark:ring-zinc-50/10;
-      @apply dark:shadow-zinc-950;
-    }
-  }
-
+  /** svg background image */
   .svg-background-image {
     --light-a-1: #3245ff;
     --light-a-2: #bc52ee;
@@ -92,5 +74,37 @@
     }
 
     @apply block w-full h-full object-cover dark:bg-zinc-800;
+  }
+
+  /** navbar */
+  .navbar-container {
+    @apply flex items-center gap-4 px-4 py-2 rounded-xl text-sm font-medium backdrop-blur-sm ring-1 shadow-lg select-none;
+    @apply bg-white/90 dark:bg-zinc-800/90;
+    @apply text-zinc-800 dark:text-zinc-200;
+    @apply ring-zinc-900/10 dark:ring-zinc-100/10;
+    @apply shadow-zinc-800/5 dark:shadow-zinc-400/5;
+  }
+
+  /** navbar item */
+  .navbar-item {
+    @apply flex items-center gap-2 px-4 py-2 transition;
+    @apply hover:text-teal-500 dark:hover:text-teal-400;
+
+    &.active {
+      @apply rounded-xl shadow ring-1;
+      @apply text-teal-500 dark:text-teal-400;
+      @apply ring-zinc-800/10 dark:ring-zinc-50/10;
+      @apply dark:shadow-zinc-950;
+    }
+  }
+
+  /** scroll x grid */
+  .scroll-x-grid {
+    @apply grid grid-rows-1 grid-flow-col gap-6;
+    @apply scrollbar-hidden overflow-x-scroll scroll-smooth snap-mandatory snap-x;
+
+    /** (100% - (grid-cols_count - 1) * gap) / grid-cols_count */
+    @apply [--grid-cols-count:1] md:[--grid-cols-count:2] lg:[--grid-cols-count:3];
+    @apply auto-cols-[calc((100%-(var(--grid-cols-count)-1)*var(--spacing)*6)/var(--grid-cols-count))];
   }
 }
