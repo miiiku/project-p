@@ -21,14 +21,14 @@ albums.forEach((album: any) => {
     class="py-8 px-12 rounded bg-stone-800/5 dark:bg-stone-100/5"
   >
     <section>
-      <ul class="flex flex-wrap gap-6 after:content-[''] after:grow-[9999]">
+      <ul class="flex flex-wrap gap-6">
         {
           otherAlbums.map((album) => (
-            <li class="grow h-[260px]">
+            <li class="grow h-[320px]">
               <a href="#" title={album.name}>
                 <div class="rounded-md overflow-hidden">
                   <img
-                    class="block h-[260px] min-w-full object-cover"
+                    class="block h-[320px] w-full object-cover"
                     src={album.cover}
                     alt={album.name}
                   />

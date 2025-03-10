@@ -6,13 +6,15 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout>
-  <div class="w-[600px] h-[800px] mx-auto bg-amber-100">
-    <div
-      class="size-full"
-      data-live-photo
-      data-photo-src="https://qn.sukoshi.xyz/project-p/IMG_2474.jpeg"
-      data-video-src="https://qn.sukoshi.xyz/project-p/IMG_2474.mov"
-      data-proactively-loads-video="true">
+  <div class="w-min mx-auto rounded-xl p-4 bg-stone-800/5 dark:bg-stone-100/5">
+    <div class="w-[300px] h-[400px] mx-auto rounded-xl overflow-hidden">
+      <div
+        class="size-full"
+        data-live-photo
+        data-photo-src="https://qn.sukoshi.xyz/project-p/IMG_2474.jpeg"
+        data-video-src="https://qn.sukoshi.xyz/project-p/IMG_2474.mov"
+        data-proactively-loads-video="true">
+      </div>
     </div>
   </div>
 </Layout>

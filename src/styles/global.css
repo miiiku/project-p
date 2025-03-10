@@ -11,28 +11,17 @@
   }
 }
 
+/*
 @utility line-bl {
-  border-left-style: var(--tw-border-style);
-  border-left-width: 1px;
-  border-color: color-mix(in oklab, var(--color-zinc-700) 5%, transparent);
-
-  @variant dark {
-    border-color: color-mix(in oklab, var(--color-zinc-300) 5%, transparent);
-  }
+  @apply border-l border-zinc-700/5 dark:border-zinc-300/10;
 }
 
 @utility line-br {
-  border-right-style: var(--tw-border-style);
-  border-right-width: 1px;
-  border-color: color-mix(in oklab, var(--color-zinc-700) 5%, transparent);
-
-  @variant dark {
-    border-color: color-mix(in oklab, var(--color-zinc-300) 5%, transparent);
-  }
+  @apply border-r border-zinc-700/5 dark:border-zinc-300/10;
 }
 
 @utility line-y {
-  @apply relative before:text-zinc-700/5 dark:before:text-zinc-300/5 after:text-zinc-700/5 dark:after:text-zinc-300/5;
+  @apply relative before:text-zinc-700/5 dark:before:text-zinc-300/10 after:text-zinc-700/5 dark:after:text-zinc-300/10;
   @apply before:absolute before:left-0 before:z-[-1] before:bg-[currentColor];
   @apply after:absolute after:right-0 after:z-[-1] after:bg-[currentColor];
   @apply before:h-[200vw] before:w-[1px] before:translate-y-[-100vw];
@@ -40,12 +29,13 @@
 }
 
 @utility line-x {
-  @apply relative before:text-zinc-700/5 dark:before:text-zinc-300/5 after:text-zinc-700/5 dark:after:text-zinc-300/5;
+  @apply relative before:text-zinc-700/5 dark:before:text-zinc-300/10 after:text-zinc-700/5 dark:after:text-zinc-300/10;
   @apply before:absolute before:top-0 before:z-[-1] before:bg-[currentColor];
   @apply after:absolute after:bottom-0 after:z-[-1] after:bg-[currentColor];
   @apply before:h-[1px] before:w-[200vw] before:translate-x-[-100vw];
   @apply after:h-[1px] after:w-[200vw] after:translate-x-[-100vw];
 }
+*/
 
 @layer components {
 

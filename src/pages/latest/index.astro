@@ -17,7 +17,7 @@ albums.forEach((album: any) => {
 
 <Layout>
   <div class="py-8 px-12 rounded bg-stone-800/5 dark:bg-stone-100/5">
-    <div class="line-x py-8 mb-12">
+    <div class="py-8">
       <h1 class="text-5xl tracking-tight text-pretty text-zinc-800 dark:text-zinc-200">Latest</h1>
       <p class="mt-4 text-lg font-medium text-zinc-700 dark:text-zinc-300">
         Heroses, feature sections, newsletter sign up forms -- everything you need to build a website.
@@ -25,10 +25,10 @@ albums.forEach((album: any) => {
     </div>
 
     <section class="mb-12">
-      <div class="line-x py-4 mb-6">
+      <div class="mb-6">
         <h3 class="font-bold text-2xl dark:text-zinc-200">Greatest Hits</h3>
       </div>
-      <div class="overflow-hidden">
+      <div>
         <ul class="scroll-x-grid">
           {
             stickyAlbums.map((album) => (
@@ -51,21 +51,13 @@ albums.forEach((album: any) => {
     </section>
 
     <section>
-      <div class="line-x py-4 mb-6">
+      <div class="mb-6">
         <h3 class="font-bold text-2xl dark:text-zinc-200">Latest Upload</h3>
       </div>
-      <div class="relative">
-        <!-- <div class="absolute -z-0 inset-0 pointer-events-none grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          <div class="line-br"></div>
-          <div class="line-bl line-br max-md:hidden"></div>
-          <div class="line-bl line-br max-lg:hidden"></div>
-          <div class="line-bl max-xl:hidden"></div>
-        </div> -->
-
+      <div>
         <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {
             otherAlbums.map((album) => (
-            // max-xl:nth-[3n+1]:line-x max-lg:nth-[2n+1]:line-x max-md:line-x     nth-[4n+1]:line-x
               <li class="shrink-0 flex-1">
                 <a href="#" title={album.name}>
                   <div class="aspect-square rounded-md overflow-hidden">
