@@ -17,27 +17,105 @@ albums.forEach((album: any) => {
 ---
 
 <Layout>
-  <div
-    class="py-8 px-12 rounded bg-stone-800/5 dark:bg-stone-100/5"
-  >
-    <section>
-      <ul class="flex flex-wrap gap-6">
-        {
-          otherAlbums.map((album) => (
-            <li class="grow h-[320px]">
-              <a href="#" title={album.name}>
-                <div class="rounded-md overflow-hidden">
-                  <img
-                    class="block h-[320px] w-full object-cover"
-                    src={album.cover}
-                    alt={album.name}
-                  />
-                </div>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </section>
-  </div>
+  <ul class="scrollbar relative w-[800px] h-22 mx-auto overflow-clip rounded bg-stone-800/5 dark:bg-stone-100/5">
+    {
+      otherAlbums.map((album) => (
+        <li class="absolute top-0 bottom-0 my-auto size-16 origin-bottom transition-transform rounded-md overflow-hidden cursor-pointer">
+          <img
+            class="block size-full object-cover"
+            src={album.cover}
+            alt={album.name}
+          />
+        </li>
+        <span class="absolute inset-0 w-1 h-8/10 m-auto bg-cyan-300"></span>
+      ))
+    }
+  </ul>
 </Layout>
+
+<script>
+  type ScrollState ={
+    midX: number;
+    activeIndex: number;
+    blockSize: number;
+    blockGap: number;
+    scrollX: number;
+    scrollRef: HTMLUListElement | null;
+    blockRefs: NodeListOf<HTMLLIElement> | null;
+  }
+
+  const s: ScrollState = {
+    midX: 0,
+    activeIndex: 0,
+    blockSize: 64,
+    blockGap: 12,
+    scrollX: 0,
+    scrollRef: null,
+    blockRefs: null,
+  }
+
+  const handleScroll = scrollThrottle((e: WheelEvent) => {
+    const blockCount = s.blockRefs?.length || 0;
+
+    if (e.deltaY > 0) s.activeIndex += 1;
+    if (e.deltaY < 0) s.activeIndex -= 1;
+
+    s.activeIndex = Math.max(0, Math.min(s.activeIndex, blockCount - 1));
+
+    updateScrollX();
+    update();
+  })
+
+  function scrollThrottle (fn: (e: WheelEvent) => void, delay = 100) {
+    let lastCallTime = 0;
+    return (e: WheelEvent) => {
+      const now = Date.now();
+      if (now - lastCallTime < delay) {
+        return;
+      }
+      lastCallTime = now;
+      fn(e);
+    };
+  }
+
+  function updateScrollX() {
+    const blockCount = s.blockRefs?.length || 0;
+    const clientWidth = s.scrollRef?.clientWidth || 0;
+    const scrollWidth = (s.blockSize + s.blockGap) * blockCount + s.blockGap;
+    const activeOffset = (s.blockSize + s.blockGap) * s.activeIndex + s.blockGap + s.blockSize / 2;
+    const x = activeOffset - s.midX;
+    s.scrollX = Math.max(0, Math.min(x, scrollWidth - clientWidth));
+  }
+
+  function update() {
+    const { activeIndex, blockRefs, blockSize, blockGap, scrollX } = s;
+    if (blockRefs && blockRefs.length) {
+      blockRefs.forEach((item, index) => {
+        item.style.transform = `
+          translate3d(${
+            index * (blockSize + blockGap) + blockGap - scrollX
+          }px, 0, 0)
+          scale(${activeIndex === index ? 1.26 : 1})
+        `
+      })
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    s.scrollRef = document.querySelector('.scrollbar');
+    s.blockRefs = document.querySelectorAll('.scrollbar li');
+    s.midX = (s.scrollRef?.clientWidth || 0) / 2;
+    update();
+  });
+
+  document.body.addEventListener('wheel', (e: WheelEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    if (Math.abs(e.deltaY) < 3) return;
+
+    handleScroll(e);
+  })
+
+
+</script>
