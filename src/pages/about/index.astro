@@ -1,36 +1,24 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-
-// const response = await fetch(new URL("/albums.json", Astro.url));
-const response = await fetch("https://qn.sukoshi.xyz/project-p/albums.json");
-const albums = await response.json();
-const stickyAlbums: Album[] = [];
-const otherAlbums: Album[] = [];
-
-albums.forEach((album: any) => {
-  if (album.is_sticky) {
-    stickyAlbums.push(album);
-  } else {
-    otherAlbums.push(album);
-  }
-});
 ---
 
 <Layout>
-  <ul class="scrollbar relative w-[800px] h-22 mx-auto overflow-clip rounded bg-stone-800/5 dark:bg-stone-100/5">
-    {
-      otherAlbums.map((album) => (
-        <li class="absolute top-0 bottom-0 my-auto size-16 origin-bottom transition-transform rounded-md overflow-hidden cursor-pointer">
-          <img
-            class="block size-full object-cover"
-            src={album.cover}
-            alt={album.name}
-          />
-        </li>
-        <span class="absolute inset-0 w-1 h-8/10 m-auto bg-cyan-300"></span>
-      ))
-    }
-  </ul>
+    <div class="pt-6 size-full ">
+      <div class="size-full rounded overflow-clip bg-stone-800/5 dark:bg-stone-100/5">
+        <img
+          id="main-image"
+          class="block h-[80vh] mx-auto object-cover"
+        />
+      </div>
+    </div>
+  <div class="fixed inset-x-0 bottom-8 grid grid-cols-[1fr_minmax(0,800px)_1fr]">
+    <div class="col-start-2 col-end-3 px-3 mx-auto rounded bg-stone-800/5 dark:bg-stone-100/5">
+      <ul class="scrollbar">
+        <span class="absolute z-10 inset-0 w-1 h-8/10 m-auto bg-cyan-300"></span>
+      </ul>
+    </div>
+  </div>
+
 </Layout>
 
 <script>
@@ -40,8 +28,10 @@ albums.forEach((album: any) => {
     blockSize: number;
     blockGap: number;
     scrollX: number;
+    mainRef: HTMLImageElement | null;
     scrollRef: HTMLUListElement | null;
     blockRefs: NodeListOf<HTMLLIElement> | null;
+    albums: any[] | null;
   }
 
   const s: ScrollState = {
@@ -50,8 +40,10 @@ albums.forEach((album: any) => {
     blockSize: 64,
     blockGap: 12,
     scrollX: 0,
+    mainRef: null,
     scrollRef: null,
     blockRefs: null,
+    albums: null,
   }
 
   const handleScroll = scrollThrottle((e: WheelEvent) => {
@@ -89,6 +81,9 @@ albums.forEach((album: any) => {
 
   function update() {
     const { activeIndex, blockRefs, blockSize, blockGap, scrollX } = s;
+    if (s.mainRef) {
+      s.mainRef.src = s.albums?.[activeIndex]?.cover || '';
+    }
     if (blockRefs && blockRefs.length) {
       blockRefs.forEach((item, index) => {
         item.style.transform = `
@@ -101,21 +96,58 @@ albums.forEach((album: any) => {
     }
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
+  function init() {
+    s.mainRef = document.querySelector('#main-image');
     s.scrollRef = document.querySelector('.scrollbar');
-    s.blockRefs = document.querySelectorAll('.scrollbar li');
+    
+    if (s.albums && s.albums.length) {
+      const fragment = document.createDocumentFragment();
+      s.albums.forEach((album: any) => {
+        const item = document.createElement('li');
+        item.classList.add('scrollbar-item');
+        item.innerHTML = `
+          <img class="block size-full object-cover" src="${album.clip}" alt="${album.name}">
+        `;
+        fragment.appendChild(item);
+      });
+      s.scrollRef?.appendChild(fragment);
+    }
+
+    s.blockRefs = document.querySelectorAll('.scrollbar .scrollbar-item');
     s.midX = (s.scrollRef?.clientWidth || 0) / 2;
+  }
+
+  async function fetchData() {
+    const response = await fetch("https://qn.sukoshi.xyz/project-p/albums.json");
+    const data = await response.json();
+
+    s.albums = data.map((album: any) => {
+      if (!album.cover.includes('unsplash')) {
+        const format = '_384_N.webp?method=shortest&qst=6&quality=15';
+        const list = album.cover.split('.');
+        list.pop();
+        const cover = `${list.join('.')}${format}`;
+        album.clip = cover;
+      } else {
+        album.clip = album.cover;
+      }
+
+      return album;
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await fetchData();
+    init();
     update();
+
+    const root = document.querySelector('#app') as HTMLDivElement;
+
+    if (!root) return;
+
+    root.addEventListener('wheel', (e: WheelEvent) => {
+      if (Math.abs(e.deltaY) < 3) return;
+      handleScroll(e);
+    })
   });
-
-  document.body.addEventListener('wheel', (e: WheelEvent) => {
-    e.stopPropagation();
-    e.preventDefault();
-
-    if (Math.abs(e.deltaY) < 3) return;
-
-    handleScroll(e);
-  })
-
-
 </script>

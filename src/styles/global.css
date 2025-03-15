@@ -97,4 +97,13 @@
     @apply [--grid-cols-count:1] md:[--grid-cols-count:2] lg:[--grid-cols-count:3];
     @apply auto-cols-[calc((100%-(var(--grid-cols-count)-1)*var(--spacing)*6)/var(--grid-cols-count))];
   }
+
+  .scrollbar {
+    @apply relative w-[800px] h-22 overflow-x-clip;
+  }
+
+  .scrollbar-item {
+    @apply absolute top-0 bottom-0 my-auto size-16;
+    @apply origin-bottom transition-transform rounded-md overflow-hidden cursor-pointer;
+  }
 }
