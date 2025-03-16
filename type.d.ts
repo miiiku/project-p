@@ -1,6 +1,6 @@
 interface Album {
   name: string;
-  desc: string;
-  cover: string;
+  src: string;
+  color: string;
   is_sticky?: boolean;
 }
