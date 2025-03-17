@@ -107,3 +107,52 @@
     @apply origin-bottom transition-transform rounded-md overflow-hidden cursor-pointer;
   }
 }
+
+::view-transition-old(focus-photo) {
+  /* @apply opacity-0 transition-opacity; */
+}
+
+::view-transition-new(focus-photo) {
+  /* @apply opacity-100 transition-opacity; */
+}
+
+::view-transition-old(focus-photo),
+::view-transition-new(focus-photo) {
+  /* animation: none;
+  mix-blend-mode: normal;
+  display: block; */
+  /* animation-duration: 3s; */
+  /* Prevent the default animation,
+  so both views remain opacity:1 throughout the transition */
+  /* animation: none; */
+  /* Use normal blending,
+  so the new view sits on top and obscures the old view */
+  /* mix-blend-mode: normal; */
+  /* overflow: clip; */
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+}
+
+@keyframes fade-out {
+  to { opacity: 0; }
+}
+
+@keyframes slide-from-right {
+  from { transform: translateX(30px); }
+}
+
+@keyframes slide-to-left {
+  to { transform: translateX(-30px); }
+}
+
+::view-transition-old(focus-photo) {
+  animation: 90ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
+    300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
+}
+
+::view-transition-new(focus-photo) {
+  animation: 210ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
+    300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+}
