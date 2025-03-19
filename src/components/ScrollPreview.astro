@@ -6,8 +6,8 @@ interface Props {
 
 const { wrapper, item } = Astro.props;
 ---
-<!-- popover="auto" -->
-<scroll-preview popover="auto" data-wrapper={wrapper} data-item={item}></scroll-preview>
+
+<scroll-preview popover="manual" data-wrapper={wrapper} data-item={item}></scroll-preview>
 
 <script>
 
@@ -33,6 +33,7 @@ const { wrapper, item } = Astro.props;
 
       this._initPhotos();
 
+      this.handleKeyUpSelf = this.handleKeyUp.bind(this);
       this.handleScrollSelf = this.handleScroll.bind(this);
       this.handleScrollingSelf = this.handleScrolling.bind(this);
       this.throttleScroll = this._throttle(this.handleScrollingSelf);
@@ -186,6 +187,7 @@ const { wrapper, item } = Astro.props;
     blockGap: number = 12;
     scrollX: number = 0;
 
+    handleKeyUpSelf: (e: KeyboardEvent) => void;
     handleScrollSelf: (e: WheelEvent) => void;
     handleScrollingSelf: (e: WheelEvent) => void;
     throttleScroll: (e: WheelEvent) => void;
@@ -263,6 +265,23 @@ const { wrapper, item } = Astro.props;
       this.throttleScroll(e);
     }
 
+    handleKeyUp(e: KeyboardEvent) {
+      if (!this.popoverOpen) return;
+      if (e.key === 'Escape') {
+        this.hide();
+      }
+      if (e.key === 'ArrowLeft') {
+        this.activeIndex -= 1;
+        this.updateScrollX();
+        this.update();
+      }
+      if (e.key === 'ArrowRight') {
+        this.activeIndex += 1;
+        this.updateScrollX();
+        this.update();
+      }
+    }
+
     show (index?: number) {
       this.showPopover();
       // this.style.display = 'block';
@@ -312,11 +331,13 @@ const { wrapper, item } = Astro.props;
         }
       })
 
-      document.documentElement.addEventListener('wheel', this.handleScrollSelf);
+      document.addEventListener('keyup', this.handleKeyUpSelf);
+      document.addEventListener('wheel', this.handleScrollSelf);
     }
 
     disconnectedCallback () {
-      document.documentElement.removeEventListener('wheel', this.handleScrollSelf);
+      document.removeEventListener('keyup', this.handleKeyUpSelf);
+      document.removeEventListener('wheel', this.handleScrollSelf);
     }
   }
 

@@ -3,5 +3,52 @@ import Layout from "../../layouts/Layout.astro";
 ---
 
 <Layout>
-  about
+  <button id="toggle-btn" class="py-2 px-4 bg-amber-100 cursor-pointer">toggle</button>
+    <img class="old-image view-image w-[300px] h-[200px] block object-cover" src="https://qn.sukoshi.xyz/project-p/photos/0_1.jpeg" />
+    <img class="new-image opacity-0 w-auto h-8/10" src="https://qn.sukoshi.xyz/project-p/photos/0_1.jpeg" />
 </Layout>
+
+<script>
+  const oldImage = document.querySelector('.old-image');
+  const newImage = document.querySelector('.new-image');
+  const toggleBtn = document.getElementById('toggle-btn') as HTMLButtonElement;
+
+  toggleBtn.addEventListener('click', () => {
+    document.startViewTransition(() => {
+      oldImage!.classList.toggle('view-image');
+      newImage!.classList.toggle('view-image');
+      oldImage!.classList.toggle('opacity-0');
+      newImage!.classList.toggle('opacity-0');
+    });
+  });
+</script>
+
+<style>
+  .view-image {
+    view-transition-name: view-image;  
+    contain: layout;
+  }
+
+  .new-image {
+    position: fixed;
+    inset-block: 0;
+    margin: auto;
+    right: 80px;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 5500ms;
+  }
+
+  ::view-transition-group(view-image) {
+    opacity: 0;
+  }
+  ::view-transition-old(view-image),
+  ::view-transition-new(view-image) {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+</style>
