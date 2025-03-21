@@ -11,32 +11,6 @@
   }
 }
 
-/*
-@utility line-bl {
-  @apply border-l border-zinc-700/5 dark:border-zinc-300/10;
-}
-
-@utility line-br {
-  @apply border-r border-zinc-700/5 dark:border-zinc-300/10;
-}
-
-@utility line-y {
-  @apply relative before:text-zinc-700/5 dark:before:text-zinc-300/10 after:text-zinc-700/5 dark:after:text-zinc-300/10;
-  @apply before:absolute before:left-0 before:z-[-1] before:bg-[currentColor];
-  @apply after:absolute after:right-0 after:z-[-1] after:bg-[currentColor];
-  @apply before:h-[200vw] before:w-[1px] before:translate-y-[-100vw];
-  @apply after:h-[200vw] after:w-[1px] after:translate-y-[-100vw];
-}
-
-@utility line-x {
-  @apply relative before:text-zinc-700/5 dark:before:text-zinc-300/10 after:text-zinc-700/5 dark:after:text-zinc-300/10;
-  @apply before:absolute before:top-0 before:z-[-1] before:bg-[currentColor];
-  @apply after:absolute after:bottom-0 after:z-[-1] after:bg-[currentColor];
-  @apply before:h-[1px] before:w-[200vw] before:translate-x-[-100vw];
-  @apply after:h-[1px] after:w-[200vw] after:translate-x-[-100vw];
-}
-*/
-
 @layer components {
 
   /** svg background image */
@@ -96,6 +70,11 @@
     /** (100% - (grid-cols_count - 1) * gap) / grid-cols_count */
     @apply [--grid-cols-count:1] md:[--grid-cols-count:2] lg:[--grid-cols-count:3];
     @apply auto-cols-[calc((100%-(var(--grid-cols-count)-1)*var(--spacing)*6)/var(--grid-cols-count))];
+  }
+
+  .exif-info-item {
+    @apply p-4 rounded-md font-medium ring-1 shadow-lg;
+    @apply ring-zinc-800/5 dark:ring-zinc-100/5 bg-gray-50/90 dark:bg-gray-800/90;
   }
 
   .scrollbar {

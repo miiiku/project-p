@@ -7,7 +7,72 @@ interface Props {
 const { wrapper, item } = Astro.props;
 ---
 
-<scroll-preview popover="manual" data-wrapper={wrapper} data-item={item}></scroll-preview>
+<scroll-preview popover="manual" data-wrapper={wrapper} data-item={item}>
+  <div class="pr-22 grid grid-cols-2 gap-4">
+    <aside class="aside-block col-span-2 exif-info-item">
+      <p class="text-xs text-gray-400 dark:text-gray-300">设备</p>
+      <div class="flex items-center mt-2">
+        <img src="https://unpkg.com/lucide-static@latest/icons/camera.svg" class="w-4 h-4 mr-2 text-accent" alt="Device">
+        <span class="font-medium">Apple - iPhone 14 Pro</span>
+      </div>
+    </aside>
+
+    <aside class="aside-block exif-info-item">
+      <p class="text-xs text-gray-400 dark:text-gray-300">光圈</p>
+      <div class="flex items-center mt-2">
+        <img src="https://unpkg.com/lucide-static@latest/icons/aperture.svg" class="w-4 h-4 mr-2 text-accent" alt="FNumber">
+        <span class="font-medium">f/1.6</span>
+      </div>
+    </aside>
+
+    <aside class="aside-block exif-info-item">
+      <p class="text-xs text-gray-400 dark:text-gray-300">快门速度</p>
+      <div class="flex items-center mt-2">
+        <img src="https://unpkg.com/lucide-static@latest/icons/timer.svg" class="w-4 h-4 mr-2 text-accent" alt="ShutterSpeedValue">
+        <span class="font-medium">1/3876</span>
+      </div>
+    </aside>
+
+    <aside class="aside-block exif-info-item">
+      <p class="text-xs text-gray-400 dark:text-gray-300">ISO感光度</p>
+      <div class="flex items-center mt-2">
+        <img src="https://unpkg.com/lucide-static@latest/icons/zap.svg" class="w-4 h-4 mr-2 text-accent" alt="ISOSpeedRatings">
+        <span class="font-medium">ISO 50</span>
+      </div>
+    </aside>
+
+    <aside class="aside-block exif-info-item">
+      <p class="text-xs text-gray-400 dark:text-gray-300">焦距</p>
+      <div class="flex items-center mt-2">
+        <img src="https://unpkg.com/lucide-static@latest/icons/focus.svg" class="w-4 h-4 mr-2 text-accent" alt="FocalLength">
+        <span class="font-medium">5.1 mm</span>
+      </div>
+    </aside>
+
+    <aside class="aside-block exif-info-item">
+      <p class="text-xs text-gray-400 dark:text-gray-300">曝光模式</p>
+      <div class="flex items-center mt-2">
+        <img src="https://unpkg.com/lucide-static@latest/icons/sun.svg" class="w-4 h-4 mr-2 text-accent" alt="ExposureMode">
+        <span class="font-medium">自动曝光</span>
+      </div>
+    </aside>
+
+    <aside class="aside-block exif-info-item">
+      <p class="text-xs text-gray-400 dark:text-gray-300">曝光补偿</p>
+      <div class="flex items-center mt-2">
+        <img src="https://unpkg.com/lucide-static@latest/icons/sun.svg" class="w-4 h-4 mr-2 text-accent" alt="ExposureBiasValue">
+        <span class="font-medium">0.00 EV</span>
+      </div>
+    </aside>
+
+    <aside class="aside-block col-span-2 exif-info-item">
+      <p class="text-xs text-gray-400 dark:text-gray-300">拍摄位置</p>
+      <div class="flex items-center mt-2">
+        <img src="https://qn.sukoshi.xyz/project-p/maps/IMG_2474.png" class="w-full h-auto block" alt="Location">
+      </div>
+    </aside>
+  </div>
+</scroll-preview>
 
 <script>
 
@@ -52,19 +117,16 @@ const { wrapper, item } = Astro.props;
           transition: color 0.3s ease-in-out;
         }
         .preview-image {
-          width: 100%;
-          height: 100%;
-          overflow: hidden;
-        }
-        .preview-image .show-image {
           display: block;
           max-width: 100%;
           max-height: 100%;
           margin: auto;
+          overflow: hidden;
           object-fit: cover;
         }
         .preview-info {
-          background-color: white;
+          padding: 16px;
+          background-color: rgba(255, 255, 255, 0.6);
         }
         .scrollbar-wrapper {
           position: fixed;
@@ -109,12 +171,9 @@ const { wrapper, item } = Astro.props;
       const template = `
         <div class="scroll-preview">
           <div class="preview-wrapper">
-            <div class="preview-image">
-              <img class="show-image" />
-            </div>
+            <img class="preview-image" />
             <div class="preview-info">
-              <div class="preview-title"></div>
-              <div class="preview-color"></div>
+              <slot />
             </div>
           </div>
           <div class="scrollbar-wrapper">
@@ -129,7 +188,7 @@ const { wrapper, item } = Astro.props;
 
       const previewPopover = content.querySelector('.scroll-preview') as HTMLDivElement;
       const previewWrapper = content.querySelector('.preview-wrapper') as HTMLDivElement;
-      const showImage = content.querySelector('.preview-image img') as HTMLImageElement;
+      const showImage = content.querySelector('.preview-image') as HTMLImageElement;
       const scrollbar = content.querySelector('.scrollbar') as HTMLUListElement;
 
       this.shadowRoot.appendChild(content);
