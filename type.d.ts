@@ -4,4 +4,11 @@ interface Photo {
   color: string;
   is_sticky?: boolean;
   clip?: string;
+  exif?: string;
+  live_video?: string;
+  location_map?: string;
+}
+
+interface ThumbPhoto extends Photo {
+  index: number;
 }
