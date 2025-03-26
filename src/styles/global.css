@@ -76,15 +76,6 @@
     @apply p-4 rounded-md font-medium ring-1 shadow-lg;
     @apply ring-zinc-800/5 dark:ring-zinc-100/5 bg-gray-50/90 dark:bg-gray-800/90;
   }
-
-  .scrollbar {
-    @apply relative w-[800px] h-22 overflow-x-clip;
-  }
-
-  .scrollbar-item {
-    @apply absolute top-0 bottom-0 my-auto size-16;
-    @apply origin-bottom transition-transform rounded-md overflow-hidden cursor-pointer;
-  }
 }
 
 ::view-transition-old(focus-photo) {
