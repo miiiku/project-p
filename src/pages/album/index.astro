@@ -2,3 +2,83 @@
 import Layout from "../../layouts/Layout.astro";
 ---
 
+
+<Layout>
+  <button id="run">run</button>
+  <div class="w-[80vw] h-[70vh] p-6 mx-auto rounded bg-stone-400 overflow-y-auto">
+    <pre id="output"></pre>
+  </div>
+</Layout>
+
+<script>
+  import { gpsCoordinateConverter } from '../../utils/index'
+  
+  const datas: any[] = [
+    "https://qn.sukoshi.xyz/project-p/photos/IMG_5601.jpeg",
+  ];
+
+  const amapKey = "";
+
+  async function fetchColor (src: string) {
+    const response = await fetch(`${src}?imageAve`);
+    const jsonData = await response.json();
+    return jsonData?.RGB;
+  }
+
+  async function fetchExif (src: string) {
+    const response = await fetch(`${src}?exif`);
+    return await response.json();
+  }
+
+  async function fetchLocationInfo (longitude: string, latitude: string) {
+    const converLongitude = gpsCoordinateConverter(longitude);
+    const converLatitude = gpsCoordinateConverter(latitude);
+    const response = await fetch(`https://restapi.amap.com/v3/geocode/regeo?location=${converLongitude},${converLatitude}&roadlevel=1&output=json&key=${amapKey}`);
+    return await response.json();
+  }
+
+  async function fetchLocationMap (longitude: string, latitude: string) {
+    const converLongitude = gpsCoordinateConverter(longitude);
+    const converLatitude = gpsCoordinateConverter(latitude);
+    const response = await fetch(`https://restapi.amap.com/v3/staticmap?location=${converLongitude},${converLatitude}&zoom=10&size=750*300&markers=mid,,A:100.147033,25.744589&key=${amapKey}`);
+    return await response.blob()
+  }
+
+  function run () {
+    const output = document.querySelector('#output');
+    datas.forEach((item) => {
+      (async function (photo: string) {
+        const result:Record<string, any> = {
+          src: photo
+        }
+        const color = await fetchColor(photo);
+        result.color = color;
+
+        const exif = await fetchExif(photo);
+        if (exif) {
+          result.exif = exif;
+        }
+
+        const longitude = exif?.GPSLongitude;
+        const latitude = exif?.GPSLatitude;
+        
+        if (longitude && latitude) {
+          const locationInfo = await fetchLocationInfo(longitude.val, latitude.val);
+          const locationMap = await fetchLocationMap(longitude.val, latitude.val);
+          if (locationInfo) {
+            result.location_info = locationInfo;
+          }
+          if (locationMap) {
+            result.location_map = locationMap;
+          }
+        }
+        if (output) {
+          output.textContent += JSON.stringify(result, null, 2) + '\n';
+        }
+        console.log(result);
+      })(item);
+    });
+  }
+
+  document.querySelector("#run")?.addEventListener('click', run);
+</script>

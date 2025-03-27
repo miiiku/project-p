@@ -40,9 +40,11 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
     if (!showImageRef || !scrollbarRef) return console.log('showImageRef or scrollbarRef is not defined');
 
     // 更新主视图
-    scrollPreviewRef.style.backgroundImage = `url(${actPhoto().src}-8bmp)`;
-    showImageRef.src = actPhoto().src;
-    showImageRef.alt = actPhoto().name;
+    const { color, src, name } = actPhoto();
+    scrollPreviewRef.style.backgroundColor = color;
+    scrollPreviewRef.style.backgroundImage = `url(${src}-8bmp)`;
+    showImageRef.src = src;
+    showImageRef.alt = name;
 
     // 更新滚动条
     const count = props.photos.length;
