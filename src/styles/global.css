@@ -71,11 +71,6 @@
     @apply [--grid-cols-count:1] md:[--grid-cols-count:2] lg:[--grid-cols-count:3];
     @apply auto-cols-[calc((100%-(var(--grid-cols-count)-1)*var(--spacing)*6)/var(--grid-cols-count))];
   }
-
-  .exif-info-item {
-    @apply p-4 rounded-md font-medium ring-1 shadow-lg;
-    @apply ring-zinc-800/5 dark:ring-zinc-100/5 bg-gray-50/90 dark:bg-gray-800/90;
-  }
 }
 
 ::view-transition-old(focus-photo) {

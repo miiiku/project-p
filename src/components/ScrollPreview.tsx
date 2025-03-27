@@ -27,6 +27,15 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
     }
   }
 
+  const actLocationInfo = () => {
+    const locationInfo = actPhoto().location_info;
+    try {
+      return locationInfo ? JSON.parse(locationInfo) : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
   const update = () => {
     if (!showImageRef || !scrollbarRef) return console.log('showImageRef or scrollbarRef is not defined');
 
@@ -144,87 +153,56 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
 
   return (
     <div ref={el => scrollPreviewRef = el} popover="manual" class="scroll-preview fixed size-full inset-0 bg-no-repeat bg-center bg-cover bg-white dark:bg-gray-800">
-      <div class="preview-wrapper size-full grid grid-cols-[1fr_500px]">
-        <img ref={el => showImageRef = el} class="preview-image block max-w-full max-h-full object-cover m-auto overflow-hidden" />
-        <div class="preview-info p-4 overflow-y-auto">
+      <div class="preview-wrapper size-full pt-10 pr-22 pb-4 pl-6 grid grid-cols-1 grid-rows-[1fr_auto] gap-y-4">
+        {/* photo view */}
+        <div class="preview-main size-full overflow-hidden">
+          <img ref={el => showImageRef = el} class="preview-image block max-w-full max-h-full object-cover m-auto" />
+        </div>
 
-          <div class="mb-4 cursor-pointer">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-panel-right-close">
-              <rect width="18" height="18" x="3" y="3" rx="2"/>
-              <path d="M15 3v18"/>
-              <path d="m8 9 3 3-3 3"/>
-            </svg>
-          </div>
-
+        {/* photo info */}
+        <div class="preview-info text-center">
           <Show when={actExif()} fallback={null}>
-            <div class="pr-22 grid grid-cols-2 gap-4">
-              <aside class="aside-block col-span-2 exif-info-item">
-                <p class="text-xs text-gray-400 dark:text-gray-300">设备</p>
-                <div class="flex items-center mt-2">
-                  <img src="https://unpkg.com/lucide-static@latest/icons/camera.svg" class="w-4 h-4 mr-2 text-accent" alt="Device" />
-                  <span class="font-medium">Apple - iPhone 14 Pro</span>
-                </div>
-              </aside>
+            <aside class="aside-block">
+              <span class="font-medium">
+                {actExif()?.Make?.val} - {actExif()?.Model?.val}
+              </span>
+            </aside>
 
-              <aside class="aside-block exif-info-item">
-                <p class="text-xs text-gray-400 dark:text-gray-300">光圈</p>
-                <div class="flex items-center mt-2">
-                  <img src="https://unpkg.com/lucide-static@latest/icons/aperture.svg" class="w-4 h-4 mr-2 text-accent" alt="FNumber" />
-                  <span class="font-medium">f/1.6</span>
-                </div>
-              </aside>
+            <aside class="aside-block flex items-center justify-center gap-4">
+              <span class="font-medium">
+                { actExif()?.FocalLength?.val }
+              </span>
+              <span class="font-medium">
+                { actExif()?.FNumber?.val }
+              </span>
+              <span class="font-medium">
+                { actExif()?.ExposureTime?.val?.split(' ')[0] }s
+              </span>
+              <span class="font-medium">
+                ISO { actExif()?.ISOSpeedRatings?.val }
+              </span>
+            </aside>
 
-              <aside class="aside-block exif-info-item">
-                <p class="text-xs text-gray-400 dark:text-gray-300">快门速度</p>
-                <div class="flex items-center mt-2">
-                  <img src="https://unpkg.com/lucide-static@latest/icons/timer.svg" class="w-4 h-4 mr-2 text-accent" alt="ShutterSpeedValue" />
-                  <span class="font-medium">1/3876</span>
-                </div>
-              </aside>
+            <Show when={actLocationInfo()}>
+              <aside class="aside-block">
+                <button
+                  popovertarget="location_map_popover"
+                  class="text-sm cursor-pointer"
+                  title={actLocationInfo()?.formatted_address}
+                >
+                  { actLocationInfo()?.formatted_address }
+                </button>
 
-              <aside class="aside-block exif-info-item">
-                <p class="text-xs text-gray-400 dark:text-gray-300">ISO感光度</p>
-                <div class="flex items-center mt-2">
-                  <img src="https://unpkg.com/lucide-static@latest/icons/zap.svg" class="w-4 h-4 mr-2 text-accent" alt="ISOSpeedRatings" />
-                  <span class="font-medium">ISO 50</span>
+                <div popover id="location_map_popover" class="rounded p-4 bg-zinc-100 dark:bg-zinc-800">
+                  <img src={actPhoto().location_map} class="w-auto h-40 block" alt="Location" />
                 </div>
               </aside>
-
-              <aside class="aside-block exif-info-item">
-                <p class="text-xs text-gray-400 dark:text-gray-300">焦距</p>
-                <div class="flex items-center mt-2">
-                  <img src="https://unpkg.com/lucide-static@latest/icons/focus.svg" class="w-4 h-4 mr-2 text-accent" alt="FocalLength" />
-                  <span class="font-medium">5.1 mm</span>
-                </div>
-              </aside>
-
-              <aside class="aside-block exif-info-item">
-                <p class="text-xs text-gray-400 dark:text-gray-300">曝光模式</p>
-                <div class="flex items-center mt-2">
-                  <img src="https://unpkg.com/lucide-static@latest/icons/sun.svg" class="w-4 h-4 mr-2 text-accent" alt="ExposureMode" />
-                  <span class="font-medium">自动曝光</span>
-                </div>
-              </aside>
-
-              <aside class="aside-block exif-info-item">
-                <p class="text-xs text-gray-400 dark:text-gray-300">曝光补偿</p>
-                <div class="flex items-center mt-2">
-                  <img src="https://unpkg.com/lucide-static@latest/icons/sun.svg" class="w-4 h-4 mr-2 text-accent" alt="ExposureBiasValue" />
-                  <span class="font-medium">0.00 EV</span>
-                </div>
-              </aside>
-
-              <aside class="aside-block col-span-2 exif-info-item">
-                <p class="text-xs text-gray-400 dark:text-gray-300">拍摄位置</p>
-                <div class="flex items-center mt-2">
-                  <img src="https://qn.sukoshi.xyz/project-p/maps/IMG_2474.png" class="w-full h-auto block" alt="Location" />
-                </div>
-              </aside>
-            </div>
+            </Show>
           </Show>
         </div>
       </div>
 
+      {/* right scroll bar */}
       <div class="scrollbar-wrapper absolute inset-y-0 right-0">
         <ul ref={el => scrollbarRef = el} class="scrollbar relative w-22 h-full overflow-y-clip bg-stone-800/5">
           <Index each={props.photos} fallback={<div>Loading...</div>}>

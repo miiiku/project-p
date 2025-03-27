@@ -4,9 +4,11 @@ interface Photo {
   color: string;
   is_sticky?: boolean;
   clip?: string;
+  thumb_img?: string;
   exif?: string;
   live_video?: string;
   location_map?: string;
+  location_info?: string;
 }
 
 interface PreviewPhoto {
