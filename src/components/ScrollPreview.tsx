@@ -18,31 +18,13 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
 
   const actPhoto = () => props.photos[activeIndex()];
 
-  const actExif = () => {
-    const exif = actPhoto().exif;
-    try {
-      return exif ? JSON.parse(exif) : null;
-    } catch (error) {
-      return null;
-    }
-  }
-
-  const actLocationInfo = () => {
-    const locationInfo = actPhoto().location_info;
-    try {
-      return locationInfo ? JSON.parse(locationInfo) : null;
-    } catch (error) {
-      return null;
-    }
-  }
-
   const update = () => {
     if (!showImageRef || !scrollbarRef) return console.log('showImageRef or scrollbarRef is not defined');
 
     // 更新主视图
     const { color, src, name } = actPhoto();
     scrollPreviewRef.style.backgroundColor = color;
-    scrollPreviewRef.style.backgroundImage = `url(${src}-8bmp)`;
+    scrollPreviewRef.style.backgroundImage = `url(${src}-r30.webp)`;
     showImageRef.src = src;
     showImageRef.alt = name;
 
@@ -64,17 +46,21 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
   createEffect(update);
 
   onCleanup(() => {
+    document.body.style.overflow = 'auto';
     document.removeEventListener('wheel', filterScrollEvent);
     document.removeEventListener('keyup', handleKeyUp);
-    serviceTargetRoot.removeEventListener('mousedown', handleShow);
     resizeObserver?.disconnect();
+
+    // 组件被销毁后，注销服务目标绑定的代理事件
+    serviceTargetRoot.removeEventListener('mousedown', handleShow);
   });
 
   onMount(() => {
+    // 服务目标绑定代理事件，用来唤起scroll priview组件
     serviceTargetRoot = document.querySelector(`.${props.wrapper}`) as HTMLDivElement;
-    
     serviceTargetRoot.addEventListener('mousedown', handleShow);
 
+    // 监听展示/隐藏事件
     scrollPreviewRef.addEventListener('toggle', (e: any) => {
       if (e.newState === 'open') show();
       if (e.newState === 'closed') hide();
@@ -155,7 +141,7 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
 
   return (
     <div ref={el => scrollPreviewRef = el} popover="manual" class="scroll-preview fixed size-full inset-0 bg-no-repeat bg-center bg-cover bg-white dark:bg-gray-800">
-      <div class="preview-wrapper size-full pt-10 pr-22 pb-4 pl-6 grid grid-cols-1 grid-rows-[1fr_auto] gap-y-4">
+      <div class="preview-wrapper backdrop-blur-[30px] size-full pt-10 pr-22 pb-4 pl-6 grid grid-cols-1 grid-rows-[1fr_auto] gap-y-4">
         {/* photo view */}
         <div class="preview-main size-full overflow-hidden">
           <img ref={el => showImageRef = el} class="preview-image block max-w-full max-h-full object-cover m-auto" />
@@ -163,36 +149,36 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
 
         {/* photo info */}
         <div class="preview-info text-center">
-          <Show when={actExif()} fallback={null}>
+          <Show when={actPhoto().exif} fallback={null}>
             <aside class="aside-block">
               <span class="font-medium">
-                {actExif()?.Make?.val} - {actExif()?.Model?.val}
+                {actPhoto().exif?.Make?.val} - {actPhoto().exif?.Model?.val}
               </span>
             </aside>
 
             <aside class="aside-block flex items-center justify-center gap-4">
               <span class="font-medium">
-                { actExif()?.FocalLength?.val }
+                { actPhoto().exif?.FocalLength?.val }
               </span>
               <span class="font-medium">
-                { actExif()?.FNumber?.val }
+                { actPhoto().exif?.FNumber?.val }
               </span>
               <span class="font-medium">
-                { actExif()?.ExposureTime?.val?.split(' ')[0] }s
+                { actPhoto().exif?.ExposureTime?.val?.split(' ')[0] }s
               </span>
               <span class="font-medium">
-                ISO { actExif()?.ISOSpeedRatings?.val }
+                ISO { actPhoto().exif?.ISOSpeedRatings?.val }
               </span>
             </aside>
 
-            <Show when={actLocationInfo()}>
+            <Show when={actPhoto().location_info}>
               <aside class="aside-block">
                 <button
                   popovertarget="location_map_popover"
                   class="text-sm cursor-pointer"
-                  title={actLocationInfo()?.formatted_address}
+                  title={actPhoto().location_info?.formatted_address}
                 >
-                  { actLocationInfo()?.formatted_address }
+                  { actPhoto().location_info?.formatted_address }
                 </button>
 
                 <div popover id="location_map_popover" class="rounded p-4 bg-zinc-100 dark:bg-zinc-800">
