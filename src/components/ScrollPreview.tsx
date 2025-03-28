@@ -148,7 +148,7 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
         </div>
 
         {/* photo info */}
-        <div class="preview-info text-center">
+        <div class="preview-info text-center text-gray-600 mix-blend-difference">
           <Show when={actPhoto().exif} fallback={null}>
             <aside class="aside-block">
               <span class="font-medium">

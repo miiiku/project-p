@@ -6,6 +6,7 @@ import Layout from "../../layouts/Layout.astro";
 <Layout>
   <button id="run">run</button>
   <div class="w-[80vw] h-[70vh] p-6 mx-auto rounded bg-stone-400 overflow-y-auto">
+    <div id="maps" class="flex flex-wrap gap-2"></div>
     <pre id="output"></pre>
   </div>
 </Layout>
@@ -27,7 +28,7 @@ import Layout from "../../layouts/Layout.astro";
     "https://qn.sukoshi.xyz/project-p/photos/IMG_4869.jpeg",
   ];
 
-  const amapKey = "";
+  const amapKey = "ef30d6c664560e028822007b7df5d81f";
 
   function fetchThumbData (src: string) {
     return new Promise(async (resolve) => {
@@ -74,7 +75,9 @@ import Layout from "../../layouts/Layout.astro";
 
   function run () {
     const output = document.querySelector('#output');
-    if (!output) return;
+    const maps = document.querySelector('#maps');
+
+    if (!output || !maps) return;
 
     datas.forEach((item) => {
       (async function (photo: string) {
@@ -101,9 +104,12 @@ import Layout from "../../layouts/Layout.astro";
 
           const location_map_url = await fetchLocationMap(longitude.val, latitude.val);
           if (location_map_url) {
-            const img = document.createElement('img');
-            img.src = location_map_url;
-            output.appendChild(img);
+            const section = document.createElement('section');
+            section.innerHTML = `
+              <div>${result.name}</div>
+              <img src="${location_map_url}" style="display: block; width: 200px;" />
+            `
+            maps.appendChild(section);
           }
         }
 
