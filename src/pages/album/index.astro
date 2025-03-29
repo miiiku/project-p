@@ -57,7 +57,7 @@ import Layout from "../../layouts/Layout.astro";
     "https://qn.sukoshi.xyz/project-p/photos/ffda33addc0cb8d90907ae3689c7b174.jpeg",
   ];
 
-  const amapKey = "";
+  const amapKey = import.meta.env.PUBLIC_AMAP_KEY;
 
   let dataResult: any[] = [];
   let dataMaps: [string, string][] = [];
