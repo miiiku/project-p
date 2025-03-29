@@ -20,6 +20,22 @@ export function getTarget(el: HTMLElement, cb: (target: HTMLElement) => boolean)
   return null;
 }
 
+export function get(object: any, path: string | string[], defaultValue?: any) {
+  // 将路径字符串转换为数组形式
+  const pathArray = Array.isArray(path) ? path : path.split(/[\.\[\]]/).filter(Boolean);
+  
+  let result = object;
+  
+  for (const key of pathArray) {
+    if (result === null || result === undefined) {
+      return defaultValue;
+    }
+    result = result[key];
+  }
+  
+  return result === undefined ? defaultValue : result;
+}
+
 export function gpsCoordinateConverter(coordinate: string) {
   const parts = coordinate.replace(/\s/g, '').split(',');
 
