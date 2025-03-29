@@ -147,45 +147,58 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
           <img ref={el => showImageRef = el} class="preview-image block max-w-full max-h-full object-cover m-auto" />
         </div>
 
-        {/* photo info */}
-        <div class="preview-info text-center text-gray-600 mix-blend-difference">
-          <Show when={actPhoto().exif} fallback={null}>
+        {/* photo info mix-blend-difference */}
+        <div class="preview-info text-center text-white">
+          <Show when={actPhoto().exif}>
             <aside class="aside-block">
               <span class="font-medium">
-                {actPhoto().exif?.Make?.val} - {actPhoto().exif?.Model?.val}
-              </span>
-            </aside>
-
-            <aside class="aside-block flex items-center justify-center gap-4">
-              <span class="font-medium">
-                { actPhoto().exif?.FocalLength?.val }
-              </span>
-              <span class="font-medium">
-                { actPhoto().exif?.FNumber?.val }
-              </span>
-              <span class="font-medium">
-                { actPhoto().exif?.ExposureTime?.val?.split(' ')[0] }s
-              </span>
-              <span class="font-medium">
-                ISO { actPhoto().exif?.ISOSpeedRatings?.val }
-              </span>
-            </aside>
-
-            <Show when={actPhoto().location_info}>
-              <aside class="aside-block">
-                <button
-                  popovertarget="location_map_popover"
-                  class="text-sm cursor-pointer"
-                  title={actPhoto().location_info?.formatted_address}
+                <Show
+                  when={!actPhoto().exif?.Model?.includes(actPhoto().exif?.Make)}
+                  fallback={actPhoto().exif?.Model}
                 >
-                  { actPhoto().location_info?.formatted_address }
-                </button>
+                  {actPhoto().exif?.Make} - {actPhoto().exif?.Model}
+                </Show>
+              </span>
+            </aside>
 
-                <div popover id="location_map_popover" class="rounded p-4 bg-zinc-100 dark:bg-zinc-800">
-                  <img src={actPhoto().location_map} class="w-auto h-40 block" alt="Location" />
-                </div>
-              </aside>
-            </Show>
+            <aside class="aside-block flex flex-wrap items-center justify-center gap-4">
+              <Show when={actPhoto().exif?.FocalLength}>
+                <span class="font-medium">
+                  { actPhoto().exif?.FocalLength }
+                </span>
+              </Show>
+              <Show when={actPhoto().exif?.FNumber}>
+                <span class="font-medium">
+                  { actPhoto().exif?.FNumber }
+                </span>
+              </Show>
+              <Show when={actPhoto().exif?.ExposureTime}>
+                <span class="font-medium">
+                  { actPhoto().exif?.ExposureTime?.split(' ')[0] }s
+                </span>
+              </Show>
+              <Show when={actPhoto().exif?.ISOSpeedRatings}>
+                <span class="font-medium">
+                  ISO { actPhoto().exif?.ISOSpeedRatings }
+                </span>
+              </Show>
+            </aside>
+          </Show>
+
+          <Show when={actPhoto().location_info}>
+            <aside class="aside-block">
+              <button
+                popovertarget="location_map_popover"
+                class="text-sm cursor-pointer"
+                title={actPhoto().location_info?.formatted_address}
+              >
+                { actPhoto().location_info?.formatted_address }
+              </button>
+
+              <div popover id="location_map_popover" class="rounded p-4 bg-zinc-100 dark:bg-zinc-800">
+                <img src={actPhoto().location_map} class="w-auto h-40 block" alt="Location" />
+              </div>
+            </aside>
           </Show>
         </div>
       </div>

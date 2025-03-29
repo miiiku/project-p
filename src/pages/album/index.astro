@@ -57,7 +57,7 @@ import Layout from "../../layouts/Layout.astro";
     "https://qn.sukoshi.xyz/project-p/photos/ffda33addc0cb8d90907ae3689c7b174.jpeg",
   ];
 
-  const amapKey = "";
+  const amapKey = "ef30d6c664560e028822007b7df5d81f";
 
   let dataResult: any[] = [];
   let dataMaps: [string, string][] = [];
@@ -171,7 +171,7 @@ import Layout from "../../layouts/Layout.astro";
     }
   }
 
-  function run () {
+  async function run () {
     const outputMap = document.querySelector('#output-map');
     const outputText = document.querySelector('#output-text');
 
@@ -183,40 +183,36 @@ import Layout from "../../layouts/Layout.astro";
     dataResult = [];
     dataMaps = [];
 
-    let count = datas.length
+    for (let i = 0; i < datas.length; i++) {
+      const photo = datas[i];
 
-    datas.forEach((item) => {
-      (async function (photo: string) {
-        const result:Record<string, any> = {
-          name: photo.split('/').pop()?.split('.')?.[0],
-          src: photo,
-        };
+      const result:Record<string, any> = {
+        name: photo.split('/').pop()?.split('.')?.[0],
+        src: photo,
+      };
 
-        result.color = await fetchColor(photo);
-        result.exif = await fetchExif(photo);
-        result.thumb_img = await fetchThumbData(photo);
+      result.color = await fetchColor(photo);
+      result.exif = await fetchExif(photo);
+      result.thumb_img = await fetchThumbData(photo);
 
-        const longitude = result.exif?.GPSLongitude;
-        const latitude = result.exif?.GPSLatitude;
-        if (longitude && latitude) {
-          const suffix = photo.split('/').pop()?.split('.')?.pop() || '';
-          const mappath = photo.replace('/photos/', '/maps/').replace(suffix, 'png');
-          result.location_map = mappath;
-          result.location_info = await fetchLocationInfo(longitude, latitude);
-          const location_map_url = await fetchLocationMap(longitude, latitude);
-          if (location_map_url) dataMaps.push([result.name, location_map_url]);
-        }
+      const longitude = result.exif?.GPSLongitude;
+      const latitude = result.exif?.GPSLatitude;
+      if (longitude && latitude) {
+        const suffix = photo.split('/').pop()?.split('.')?.pop() || '';
+        const mappath = photo.replace('/photos/', '/maps/').replace(suffix, 'png');
+        result.location_map = mappath;
+        result.location_info = await fetchLocationInfo(longitude, latitude);
+        const location_map_url = await fetchLocationMap(longitude, latitude);
+        if (location_map_url) dataMaps.push([result.name, location_map_url]);
+      }
 
-        dataResult.push(result);
+      dataResult.push(result);
 
-        count--;
+      await sleep();
+    }
 
-        if (count <=0) {
-          outputMap.textContent = JSON.stringify(dataMaps, null, 2);
-          outputText.textContent = JSON.stringify(dataResult, null, 2);
-        }
-      })(item);
-    });
+    outputMap.textContent = JSON.stringify(dataMaps, null, 2);
+    outputText.textContent = JSON.stringify(dataResult, null, 2);
   }
 
   document.querySelector("#run")?.addEventListener('click', run);
