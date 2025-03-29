@@ -73,12 +73,12 @@ photos.forEach((photo: any) => {
             otherPhotos.map((photo, index) => (
               <li class="grow h-[320px]">
                 <div
-                  style={{ backgroundColor: photo.color }}
-                  class="photo-item cursor-pointer rounded-md overflow-hidden"
+                  style={{
+                    backgroundColor: photo.color,
+                    backgroundImage: `url(${photo.thumb_img})`,
+                  }}
+                  class="photo-item bg-no-repeat bg-cover bg-center cursor-pointer rounded-md overflow-hidden"
                   title={photo.name}
-                  data-src={`${photo.src}-default.webp`}
-                  data-clip={`${photo.src}-r30.webp`}
-                  data-color={photo.color}
                   data-index={index}
                 >
                   <picture>

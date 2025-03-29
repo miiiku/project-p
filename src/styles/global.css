@@ -71,6 +71,13 @@
     @apply [--grid-cols-count:1] md:[--grid-cols-count:2] lg:[--grid-cols-count:3];
     @apply auto-cols-[calc((100%-(var(--grid-cols-count)-1)*var(--spacing)*6)/var(--grid-cols-count))];
   }
+
+  /** popover wrapper */
+  .popover-wrapper {
+    @apply fixed rounded p-4 overflow-visible -translate-x-1/2 -translate-y-full bg-zinc-100 dark:bg-zinc-800;
+    @apply after:size-4 after:rounded after:rotate-45 after:translate-y-3/10 after:bg-zinc-100 dark:after:bg-zinc-800;
+    @apply after:absolute after:content-[''] after:bottom-0 after:inset-x-0 after:mx-auto;
+  }
 }
 
 ::view-transition-old(focus-photo) {

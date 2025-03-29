@@ -1,6 +1,8 @@
 import { createEffect, createSignal, Index, onCleanup, onMount, Show } from "solid-js";
 import { getTarget, throttle } from "../utils";
 
+import Popover from './Popover';
+
 export default function ScrollPreview(props: { wrapper: string, item: string, photos: Photo[] }) {
   let serviceTargetRoot: HTMLDivElement;
 
@@ -13,8 +15,8 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
   const blockSize: number = 64;
   const blockGap: number = 12;
 
-  const [activeIndex, setActiveIndex] = createSignal(0);
-  const [scrollY, setScrollY] = createSignal(0);
+  const [activeIndex, setActiveIndex] = createSignal<number>(0);
+  const [scrollY, setScrollY] = createSignal<number>(0);
 
   const actPhoto = () => props.photos[activeIndex()];
 
@@ -122,6 +124,11 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
 
   const hide = () => {
     scrollPreviewRef?.hidePopover();
+    scrollPreviewRef.style.backgroundColor = '';
+    scrollPreviewRef.style.backgroundImage = '';
+    showImageRef.src = '';
+    showImageRef.alt = '';
+
     document.body.style.overflow = 'auto';
     document.removeEventListener('wheel', filterScrollEvent);
     document.removeEventListener('keyup', handleKeyUp);
@@ -195,9 +202,9 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
                 { actPhoto().location_info?.formatted_address }
               </button>
 
-              <div popover id="location_map_popover" class="rounded p-4 bg-zinc-100 dark:bg-zinc-800">
+              <Popover id="location_map_popover">
                 <img src={actPhoto().location_map} class="w-auto h-40 block" alt="Location" />
-              </div>
+              </Popover>
             </aside>
           </Show>
         </div>
