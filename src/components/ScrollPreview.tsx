@@ -8,20 +8,27 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
 
   let scrollPreviewRef: HTMLDivElement;
   let showImageRef: HTMLImageElement;
-  let scrollbarRef: HTMLUListElement;
 
+  let resizeObserverInit: boolean = false;
   let resizeObserver: ResizeObserver;
 
   const blockSize: number = 64;
   const blockGap: number = 12;
 
-  const [activeIndex, setActiveIndex] = createSignal<number>(0);
-  const [scrollY, setScrollY] = createSignal<number>(0);
+  const [open, setOpen] = createSignal(false);
+  const [actIdx, setActIdx] = createSignal(0);
+  const [scrollY, setScrollY] = createSignal(0);
 
-  const actPhoto = () => props.photos[activeIndex()];
+  const actPhoto = () => props.photos[actIdx()] || {};
 
   const update = () => {
-    if (!showImageRef || !scrollbarRef) return console.log('showImageRef or scrollbarRef is not defined');
+    console.trace();
+    if (!showImageRef) {
+      return console.log('showImageRef is not defined');
+    }
+    if (!open()) {
+      return console.log('scroll preview is not open');
+    }
 
     // 更新主视图
     const { color, src, name } = actPhoto();
@@ -32,20 +39,22 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
 
     // 更新滚动条
     const count = props.photos.length;
-    const clientHeight = scrollbarRef.clientHeight || 0;
+    const clientHeight = window.innerHeight || 0;
     const scrollHeight = (blockSize + blockGap) * count + blockGap;
 
     if (scrollHeight <= clientHeight) {
       const offset = (clientHeight - scrollHeight) / 2;
       setScrollY(-offset);
     } else {
-      const actOffset = (blockSize + blockGap) * activeIndex() + blockGap + blockSize / 2;
+      const actOffset = (blockSize + blockGap) * actIdx() + blockGap + blockSize / 2;
       const y = actOffset - clientHeight / 2;
       setScrollY(Math.max(0, Math.min(scrollHeight - clientHeight, y)));
     }
   }
 
-  createEffect(update);
+  const getSafeIdx = (idx: number) => Math.max(0, Math.min(props.photos.length - 1, idx));
+ 
+  createEffect(() => open() && update());
 
   onCleanup(() => {
     document.body.style.overflow = 'auto';
@@ -61,12 +70,6 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
     // 服务目标绑定代理事件，用来唤起scroll priview组件
     serviceTargetRoot = document.querySelector(`.${props.wrapper}`) as HTMLDivElement;
     serviceTargetRoot.addEventListener('mousedown', handleShow);
-
-    // 监听展示/隐藏事件
-    scrollPreviewRef.addEventListener('toggle', (e: any) => {
-      if (e.newState === 'open') show();
-      if (e.newState === 'closed') hide();
-    })
   });
 
   const handleShow = (e: any) => {
@@ -76,14 +79,26 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
     show(Number(isServiceTarget.dataset.index));
   }
 
-  const handleScroll = throttle((e: WheelEvent) => {
-    const count = props.photos.length;
+  const handleKeyUp = (e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      hide();
+    }
 
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      setActIdx((prev) => getSafeIdx(prev - 1));
+    }
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      setActIdx((prev) => getSafeIdx(prev + 1));
+    }
+  }
+
+  const handleScroll = throttle((e: WheelEvent) => {
     if (e.deltaY > 0) {
-      setActiveIndex((prev) => Math.min(count - 1, prev + 1));
+      setActIdx((prev) => getSafeIdx(prev + 1));
     }
     if (e.deltaY < 0) {
-      setActiveIndex((prev) => Math.max(0, prev - 1));
+      setActIdx((prev) => getSafeIdx(prev - 1));
     }
   }, 100);
 
@@ -92,37 +107,30 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
     handleScroll(e);
   }
 
-  const handleKeyUp = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      hide();
-    }
-
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-      setActiveIndex((prev) => Math.max(0, prev - 1));
-    }
-
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-      setActiveIndex((prev) => Math.min(props.photos.length - 1, prev + 1));
-    }
-  }
-
-  const show = (index?: number) => {
+  const show = (index: number) => {
+    setOpen(true);
     scrollPreviewRef?.showPopover();
     document.body.style.overflow = 'hidden';
     document.addEventListener('wheel', filterScrollEvent);
     document.addEventListener('keyup', handleKeyUp);
 
-    resizeObserver = new ResizeObserver(() => update());
+    resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === scrollPreviewRef) {
+          resizeObserverInit && update();
+          resizeObserverInit = true;
+        }
+      }
+    });
+
+    resizeObserverInit = false;
     resizeObserver.observe(scrollPreviewRef);
 
-    if (index !== undefined) {
-      setActiveIndex(index);
-    } else {
-      update();
-    }
+    setActIdx(getSafeIdx(index));
   }
 
   const hide = () => {
+    setOpen(false);
     scrollPreviewRef?.hidePopover();
     scrollPreviewRef.style.backgroundColor = '';
     scrollPreviewRef.style.backgroundImage = '';
@@ -135,7 +143,7 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
     resizeObserver?.disconnect();
 
     // 让当前展示图片对应的画廊图片滚动到中心位置
-    const selector = `.${props.item}[data-index='${activeIndex()}']`;
+    const selector = `.${props.item}[data-index='${actIdx()}']`;
     const targetPhoto = serviceTargetRoot.querySelector(selector) as HTMLDivElement;
     if (targetPhoto) {
       const { top, height } = targetPhoto.getBoundingClientRect();
@@ -190,7 +198,11 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
                     class="text-sm cursor-pointer"
                     title={val?.formatted_address}
                   >
-                    { val?.formatted_address }
+                    { val?.province }
+                    { val?.city }
+                    { val?.district }
+                    { val?.township }
+                    { val?.streetName }
                   </button>
                 </aside>
               )
@@ -211,7 +223,7 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
 
       {/* right scroll bar */}
       <div class="scrollbar-wrapper absolute inset-y-0 right-0">
-        <ul ref={el => scrollbarRef = el} class="scrollbar relative w-22 h-full overflow-y-clip bg-stone-800/5">
+        <ul class="scrollbar relative w-22 h-full overflow-y-clip bg-stone-800/5">
           <Index each={props.photos} fallback={<div>Loading...</div>}>
             {
               (photo, index) => (
@@ -220,7 +232,7 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
                   style={{
                     transform: `
                       translate3d(0, ${index * (blockSize + blockGap) + blockGap - scrollY()}px, 0)
-                      scale(${activeIndex() === index ? 1.26 : 1}
+                      scale(${actIdx() === index ? 1.26 : 1}
                     `
                   }}
                 >

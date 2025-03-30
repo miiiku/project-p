@@ -11,6 +11,15 @@
   }
 }
 
+@theme {
+  --animate-popover: show-popover 0.4s ease forwards;
+
+  @keyframes show-popover {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
 @layer components {
 
   /** svg background image */
@@ -74,6 +83,7 @@
 
   /** popover wrapper */
   .popover-wrapper {
+    @apply animate-popover;
     @apply fixed rounded p-4 overflow-visible -translate-x-1/2 -translate-y-full bg-zinc-100 dark:bg-zinc-800;
     @apply after:size-4 after:rounded after:rotate-45 after:translate-y-3/10 after:bg-zinc-100 dark:after:bg-zinc-800;
     @apply after:absolute after:content-[''] after:bottom-0 after:inset-x-0 after:mx-auto;
