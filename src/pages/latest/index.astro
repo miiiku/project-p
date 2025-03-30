@@ -20,9 +20,8 @@ photos.forEach((photo: any) => {
 
 <Layout>
   <div class="py-8 px-12 rounded bg-stone-800/5 dark:bg-stone-100/5">
-    <div class="py-8">
-      <h1 class="text-5xl tracking-tight text-pretty font-bold text-zinc-800 dark:text-zinc-200">Latest</h1>
-      <p class="mt-4 text-lg font-medium text-zinc-500 dark:text-zinc-300">
+    <div class="pb-8">
+      <p class="text-lg font-medium text-zinc-500 dark:text-zinc-300">
         Update the latest photography works every week.
       </p>
     </div>
@@ -44,8 +43,11 @@ photos.forEach((photo: any) => {
                 >
                   <h4 class="font-bold dark:text-zinc-200 mb-2">{photo.name}</h4>
                   <div 
-                    style={{ backgroundColor: photo.color }}
-                    class="aspect-video rounded overflow-hidden"
+                    style={{
+                      backgroundColor: photo.color,
+                      backgroundImage: photo.thumb_img ? `url(${photo.thumb_img})` : '',
+                    }}
+                    class="aspect-video rounded bg-no-repeat bg-cover bg-center overflow-hidden"
                   >
                     <picture class="rounded-md overflow-hidden">
                       <source media="(min-width: 2100px)" srcset={`${photo.src}-r80.webp`} />
@@ -71,13 +73,13 @@ photos.forEach((photo: any) => {
         <ul class="photo-list flex flex-wrap gap-6">
           {
             otherPhotos.map((photo, index) => (
-              <li class="grow h-[320px]">
+              <li class="grow h-[360px]">
                 <div
                   style={{
                     backgroundColor: photo.color,
-                    backgroundImage: `url(${photo.thumb_img})`,
+                    backgroundImage: photo.thumb_img ? `url(${photo.thumb_img})` : '',
                   }}
-                  class="photo-item bg-no-repeat bg-cover bg-center cursor-pointer rounded-md overflow-hidden"
+                  class="photo-item h-full bg-no-repeat bg-cover bg-center cursor-pointer rounded-md overflow-hidden"
                   title={photo.name}
                   data-index={index}
                 >
@@ -85,9 +87,11 @@ photos.forEach((photo: any) => {
                     <source media="(min-width: 2100px)" srcset={`${photo.src}-r80.webp`} />
                     <source media="(min-width: 1200px)" srcset={`${photo.src}-r50.webp`} />
                     <img
-                      class="block h-[320px] w-full object-cover"
+                      class="block h-full w-full object-cover"
                       src={`${photo.src}-r30.webp`}
                       alt={photo.name}
+                      width={photo.info?.width}
+                      height={photo.info?.height}
                       loading="lazy"
                     />
                   </picture>

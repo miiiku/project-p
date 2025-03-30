@@ -117,9 +117,9 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
 
     if (index !== undefined) {
       setActiveIndex(index);
+    } else {
+      update();
     }
-
-    update();
   }
 
   const hide = () => {
@@ -159,53 +159,52 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
           <Show when={actPhoto().exif}>
             <aside class="aside-block">
               <span class="font-medium">
-                <Show
-                  when={!actPhoto().exif?.Model?.includes(actPhoto().exif?.Make)}
-                  fallback={actPhoto().exif?.Model}
-                >
-                  {actPhoto().exif?.Make} - {actPhoto().exif?.Model}
+                <Show when={actPhoto().exif?.Model} keyed>
+                  { val => <span class="font-medium">{val}</span> }
                 </Show>
               </span>
             </aside>
 
             <aside class="aside-block flex flex-wrap items-center justify-center gap-4">
-              <Show when={actPhoto().exif?.FocalLength}>
-                <span class="font-medium">
-                  { actPhoto().exif?.FocalLength }
-                </span>
+              <Show when={actPhoto().exif?.FocalLength} keyed>
+                { val => <span class="font-medium">{val}</span> }
               </Show>
-              <Show when={actPhoto().exif?.FNumber}>
-                <span class="font-medium">
-                  { actPhoto().exif?.FNumber }
-                </span>
+              <Show when={actPhoto().exif?.FNumber} keyed>
+                { val => <span class="font-medium">{val}</span> }
               </Show>
-              <Show when={actPhoto().exif?.ExposureTime}>
-                <span class="font-medium">
-                  { actPhoto().exif?.ExposureTime?.split(' ')[0] }s
-                </span>
+              <Show when={actPhoto().exif?.ExposureTime} keyed>
+                { val => <span class="font-medium">{ val.split(' ')[0] }s</span> }
               </Show>
-              <Show when={actPhoto().exif?.ISOSpeedRatings}>
-                <span class="font-medium">
-                  ISO { actPhoto().exif?.ISOSpeedRatings }
-                </span>
+              <Show when={actPhoto().exif?.ISOSpeedRatings} keyed>
+                { val => <span class="font-medium">ISO {val}</span> }
               </Show>
             </aside>
           </Show>
 
-          <Show when={actPhoto().location_info}>
-            <aside class="aside-block">
-              <button
-                popovertarget="location_map_popover"
-                class="text-sm cursor-pointer"
-                title={actPhoto().location_info?.formatted_address}
-              >
-                { actPhoto().location_info?.formatted_address }
-              </button>
+          <Show when={actPhoto().location_info} keyed>
+            {
+              val => (
+                <aside class="aside-block">
+                  <button
+                    popovertarget="location_map_popover"
+                    class="text-sm cursor-pointer"
+                    title={val?.formatted_address}
+                  >
+                    { val?.formatted_address }
+                  </button>
+                </aside>
+              )
+            }
+          </Show>
 
-              <Popover id="location_map_popover">
-                <img src={actPhoto().location_map} class="w-auto h-40 block" alt="Location" />
-              </Popover>
-            </aside>
+          <Show when={actPhoto().location_map} keyed>
+            {
+              val => (
+                <Popover id="location_map_popover">
+                  <img src={val} class="w-auto h-40 block" alt="Location" />
+                </Popover>
+              )
+            }
           </Show>
         </div>
       </div>

@@ -19,42 +19,20 @@ import Layout from "../../layouts/Layout.astro";
   import { get, gpsCoordinateConverter } from '../../utils/index'
    
   const datas: any[] = [
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_2474.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4359.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4398.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4413.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4432.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4556.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4568.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4598.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4624.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4646.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4662.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4663.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4752.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4772.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4790.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4800.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4869.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4871.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4894.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4901.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4906.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4913.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4920.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4922.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4924.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4939.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_5032.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_5601.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_5603.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_6156.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_6199.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_6279.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_6356.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/cd40f146011824dc7d55870d8b56f281.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/d06f0d326073e712494ff2104a92ddbf.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/ffda33addc0cb8d90907ae3689c7b174.jpeg",
+    "https://qn.sukoshi.xyz/project-p/photos/IMG_1903.jpeg",
+    "https://qn.sukoshi.xyz/project-p/photos/IMG_1935.jpeg",
+    "https://qn.sukoshi.xyz/project-p/photos/IMG_1937.jpeg",
+    "https://qn.sukoshi.xyz/project-p/photos/IMG_1939.jpeg",
+    "https://qn.sukoshi.xyz/project-p/photos/IMG_2597.jpeg",
+    "https://qn.sukoshi.xyz/project-p/photos/IMG_2606.jpeg",
+    "https://qn.sukoshi.xyz/project-p/photos/IMG_2630.jpeg",
+    "https://qn.sukoshi.xyz/project-p/photos/IMG_2631.jpeg",
+    "https://qn.sukoshi.xyz/project-p/photos/IMG_2632.jpeg",
+    "https://qn.sukoshi.xyz/project-p/photos/IMG_2831.jpeg",
+    "https://qn.sukoshi.xyz/project-p/photos/IMG_2842.jpeg",
+    "https://qn.sukoshi.xyz/project-p/photos/IMG_3025.jpeg",
+    "https://qn.sukoshi.xyz/project-p/photos/IMG_3027.jpeg",
+    "https://qn.sukoshi.xyz/project-p/photos/IMG_3094.jpeg",
   ];
 
   const amapKey = import.meta.env.PUBLIC_AMAP_KEY;
@@ -77,7 +55,13 @@ import Layout from "../../layouts/Layout.astro";
         reader.onloadend = () => resolve(reader.result);
         reader.readAsDataURL(data);
       }
-    })
+    });
+  }
+
+  async function fetchInfo (src: string) {
+    const response = await fetch(`${src}?imageInfo`);
+    const data = await response.json();
+    return data;
   }
 
   async function fetchColor (src: string) {
@@ -89,6 +73,8 @@ import Layout from "../../layouts/Layout.astro";
   async function fetchExif (src: string) {
     const response = await fetch(`${src}?exif`);
     const exif =  await response.json();
+
+    if (!exif || exif.error) return null;
 
     const vaildFields = [
       'GPSLatitude',
@@ -103,6 +89,7 @@ import Layout from "../../layouts/Layout.astro";
       'ISOSpeedRatings',
       'DateTime'
     ];
+
     const result: Record<string, any> = {};
 
     vaildFields.forEach((field: string) => {
@@ -191,6 +178,7 @@ import Layout from "../../layouts/Layout.astro";
         src: photo,
       };
 
+      result.info = await fetchInfo(photo);
       result.color = await fetchColor(photo);
       result.exif = await fetchExif(photo);
       result.thumb_img = await fetchThumbData(photo);

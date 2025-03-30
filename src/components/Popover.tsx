@@ -36,7 +36,7 @@ export default function Popover (props: { id: string, children: any }) {
       id={props.id}
       class="popover-wrapper"
       style={{ top: `${top()}px`, left: `${left()}px` }}
-    > 
+    >
       { props.children }
     </div>
   )
