@@ -232,7 +232,7 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
                     `
                   }}
                 >
-                  <img class="scrollbar-img block w-full h-full object-cover" src={`${photo().src}-r30.webp`} alt={photo().name} />
+                  <img class="scrollbar-img block w-full h-full object-cover" src={`${photo().src}-120.webp`} alt={photo().name} />
                 </li>
               )
             }
