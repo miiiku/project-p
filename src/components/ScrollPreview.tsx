@@ -114,9 +114,6 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
   const hide = () => {
     setOpen(false);
     scrollPreviewRef?.hidePopover();
-    scrollPreviewRef.style.backgroundColor = '';
-    scrollPreviewRef.style.backgroundImage = '';
-
     document.body.style.overflow = 'auto';
     document.removeEventListener('wheel', filterScrollEvent);
     document.removeEventListener('keyup', handleKeyUp);
