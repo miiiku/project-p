@@ -55,7 +55,7 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
   onMount(() => {
     // 服务目标绑定代理事件，用来唤起scroll priview组件
     serviceTargetRoot = document.querySelector(`.${props.wrapper}`) as HTMLDivElement;
-    serviceTargetRoot.addEventListener('mousedown', handleShow);
+    serviceTargetRoot.addEventListener('click', handleShow);
   });
 
   const handleShow = (e: any) => {
@@ -135,13 +135,13 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
     // 更新背景
     const { color, src, name } = actPhoto();
     scrollPreviewRef.style.backgroundColor = color;
-    scrollPreviewRef.style.backgroundImage = `url(${src}-r30.webp)`;
+    scrollPreviewRef.style.backgroundImage = `url(${src}-640w.webp)`;
 
     return (
       <img
         alt={name}
         src={src}
-        style={{ "background-image": `url(${actPhoto().thumb_img})` }}
+        style={{ "background-image": `url(${src}-tiny.bmp)` }}
         class="preview-image object-cover block max-w-full max-h-full m-auto bg-no-repeat bg-cover bg-center"
       />
     )
@@ -229,7 +229,7 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
                     `
                   }}
                 >
-                  <img class="scrollbar-img block w-full h-full object-cover" src={`${photo().src}-120.webp`} alt={photo().name} />
+                  <img class="scrollbar-img block w-full h-full object-cover" src={`${photo().src}-120w.webp`} alt={photo().name} />
                 </li>
               )
             }

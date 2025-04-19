@@ -45,19 +45,35 @@ photos.forEach((photo: any) => {
                   <div 
                     style={{
                       backgroundColor: photo.color,
-                      backgroundImage: photo.thumb_img ? `url(${photo.thumb_img})` : '',
+                      backgroundImage: `url(${photo.src}-tiny.bmp)`,
                     }}
                     class="aspect-video rounded bg-no-repeat bg-cover bg-center overflow-hidden"
                   >
-                    <picture class="rounded-md overflow-hidden">
-                      <source media="(min-width: 2100px)" srcset={`${photo.src}-r80.webp`} />
-                      <source media="(min-width: 1280px)" srcset={`${photo.src}-r50.webp`} />
-                      <img
-                        class="block w-full h-full object-cover"
-                        src={`${photo.src}-r30.webp`}
-                        alt={photo.name}
-                      />
-                    </picture>
+                    <img
+                      loading="lazy"
+                      class="block w-full h-full object-cover"
+                      src={`${photo.src}-1024w.webp`}
+                      alt={photo.name}
+                      width={photo.info?.width}
+                      height={photo.info?.height}
+                      sizes="
+                        (max-width: 768px) 100vw,
+                        (max-width: 1366px) 50vw,
+                        (min-width: 1367px) 33vw,
+                        100vw
+                      "
+                      srcset={`
+                        ${photo.src}-360w.webp 360w,
+                        ${photo.src}-480w.webp 480w,
+                        ${photo.src}-640w.webp 640w,
+                        ${photo.src}-800w.webp 800w,
+                        ${photo.src}-1024w.webp 1024w,
+                        ${photo.src}-1280w.webp 1280w,
+                        ${photo.src}-1440w.webp 1440w,
+                        ${photo.src}-1920w.webp 1920w,
+                        ${photo.src}-2560w.webp 2560w
+                      `}
+                    />
                   </div>
                 </div>
               </li>
@@ -77,24 +93,37 @@ photos.forEach((photo: any) => {
                 <div
                   style={{
                     backgroundColor: photo.color,
-                    backgroundImage: photo.thumb_img ? `url(${photo.thumb_img})` : '',
+                    backgroundImage: `url(${photo.src}-tiny.bmp)`,
                   }}
                   class="photo-item h-full bg-no-repeat bg-cover bg-center cursor-pointer rounded-md overflow-hidden"
                   title={photo.name}
                   data-index={index}
                 >
-                  <picture>
-                    <source media="(min-width: 2100px)" srcset={`${photo.src}-r80.webp`} />
-                    <source media="(min-width: 1200px)" srcset={`${photo.src}-r50.webp`} />
-                    <img
-                      class="block h-full w-full object-cover"
-                      src={`${photo.src}-r30.webp`}
-                      alt={photo.name}
-                      width={photo.info?.width}
-                      height={photo.info?.height}
-                      loading="lazy"
-                    />
-                  </picture>
+                  <img
+                    loading="lazy"
+                    class="block h-full w-full object-cover"
+                    src={`${photo.src}-1024w.webp`}
+                    alt={photo.name}
+                    width={photo.info?.width}
+                    height={photo.info?.height}
+                    sizes="
+                      (max-width: 768px) 100vw,
+                      (max-width: 1366px) 50vw,
+                      (min-width: 1367px) 33vw,
+                      100vw
+                    "
+                    srcset={`
+                      ${photo.src}-360w.webp 360w,
+                      ${photo.src}-480w.webp 480w,
+                      ${photo.src}-640w.webp 640w,
+                      ${photo.src}-800w.webp 800w,
+                      ${photo.src}-1024w.webp 1024w,
+                      ${photo.src}-1280w.webp 1280w,
+                      ${photo.src}-1440w.webp 1440w,
+                      ${photo.src}-1920w.webp 1920w,
+                      ${photo.src}-2560w.webp 2560w
+                    `}
+                  />
                 </div>
               </li>
             ))
