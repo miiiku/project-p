@@ -12,7 +12,7 @@ type LayoutItem = {
 
 export default function MasonryLayout(props: Props) {
 
-  const [cols, setCols] = createSignal(4);
+  const [cols, setCols] = createSignal(3);
   const [layout, setLayout] = createSignal<LayoutItem[]>([]);
 
   const calcLayout = () => {
@@ -44,7 +44,7 @@ export default function MasonryLayout(props: Props) {
   })
 
   return (
-    <div class="masonry-layout" style={{ '--col-count': 4, '--col-gap': '12px', '--row-gap': '12px' }}>
+    <div class="masonry-layout" style={{ '--col-count': cols(), '--col-gap': '24px', '--row-gap': '24px' }}>
       <div class="masonry-wrapper grid grid-cols-[repeat(var(--col-count),minmax(0,1fr))] gap-x-(--col-gap) items-start">
         <For each={layout()}>
           {(layout) => (
