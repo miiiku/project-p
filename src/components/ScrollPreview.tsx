@@ -142,7 +142,7 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
         alt={name}
         src={src}
         style={{ "background-image": `url(${src}-tiny.bmp)` }}
-        class="preview-image object-cover block max-w-full max-h-full m-auto bg-no-repeat bg-cover bg-center"
+        class="preview-image object-cover block max-w-full max-h-full bg-no-repeat bg-cover bg-center"
       />
     )
   }
@@ -151,7 +151,7 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
     <div ref={el => scrollPreviewRef = el} popover="manual" class="scroll-preview fixed size-full inset-0 bg-no-repeat bg-center bg-cover bg-white dark:bg-gray-800">
       <div class="preview-wrapper backdrop-blur-[30px] size-full pt-10 pr-22 pb-4 pl-6 grid grid-cols-1 grid-rows-[1fr_auto] gap-y-4">
         {/* photo view */}
-        <div class="preview-main size-full overflow-hidden relative">
+        <div class="preview-main size-full flex justify-center items-center overflow-hidden">
           { renderPhotoView() }
         </div>
 

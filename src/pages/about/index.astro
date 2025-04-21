@@ -1,58 +1,91 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import MasonryLayout from "../../components/MasonryLayout";
+
+const photos = [
+  { src: "https://webkit.org/demos/grid3/photos/photos/jubeo-hernandez-2FxiqXZyB7s-unsplash.jpg", width: 640, height: 735 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/jubeo-hernandez-5ajzXUSb-q4-unsplash.jpg", width: 640, height: 640 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/micheile-henderson-KUbt9qYUmxw-unsplash.jpg", width: 640, height: 640 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/jorgen-hendriksen-2V1AgzYuOJc-unsplash.jpg", width: 640, height: 306 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/nik-_gScLDbcg2k-unsplash.jpg", width: 640, height: 427 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/sourav-ek-JMmNHe9lvFU-unsplash.jpg", width: 640, height: 800 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/eugenivy_now-skXOY314xMQ-unsplash.jpg", width: 640, height: 263 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/sourav-ek-pm0O5YpXeAo-unsplash.jpg", width: 640, height: 960 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/farriou-8jdrapiKD1I-unsplash.jpg", width: 640, height: 389 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/adam-bignell-Frt_UFRKMvc-unsplash.jpg", width: 640, height: 804 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/agata-ciosek-eppywzUKWzA-unsplash.jpg", width: 640, height: 764 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/eugenivy_now-VxoaIWyyaaI-unsplash.jpg", width: 640, height: 852 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/oliver-sjostrom-ITRnilDKqGs-unsplash.jpg", width: 640, height: 778 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/kyle-vaughn-i3ka9q7EhH8-unsplash.jpg", width: 640, height: 885 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/alexandr-istomin-QmuHSij3bzk-unsplash.jpg", width: 640, height: 960 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/ciocan-ciprian-armvMS3dYng-unsplash.jpg", width: 640, height: 642 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/dylan-taylor-O_QJLYPvqa4-unsplash.jpg", width: 640, height: 319 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/francesca-saraco-fC9ydjoOOHA-unsplash.jpg", width: 640, height: 865 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/stacey-knipe-0hznujQ4fMk-unsplash.jpg", width: 640, height: 600 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/maria-teneva-Y-0pfJPmjXY-unsplash.jpg", width: 640, height: 622 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/philip-oroni-VKIXwWsRwt4-unsplash.jpg", width: 640, height: 427 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/ryunosuke-kikuno-odJXXIELx6Q-unsplash.jpg", width: 640, height: 962 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/micke-lindstrom-wJIhQLXG5CI-unsplash.jpg", width: 640, height: 480 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/soekarno-omar-TkNwKbKQNbg-unsplash.jpg", width: 640, height: 801 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/iskra-photography-dZPYgXncUK8-unsplash.jpg", width: 640, height: 427 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/nikunj-singh-jCjiVCGc2Ik-unsplash.jpg", width: 640, height: 818 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/clement-m-h7vKkZNNThE-unsplash.jpg", width: 640, height: 191 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/bundo-kim-VRbd6ss_LJI-unsplash.jpg", width: 640, height: 762 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/chalo-gallardo-F01kfMEodyk-unsplash.jpg", width: 640, height: 310 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/eberhard-grossgasteiger-l6WnmYW0LQY-unsplash.jpg", width: 640, height: 427 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/iskra-photography-IH9syVvlgT8-unsplash.jpg", width: 640, height: 651 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/kirsten-frank-7LDcvZbEPQs-unsplash.jpg", width: 640, height: 833 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/mahdi-mahmoodi-Nis_bQyp2Qc-unsplash.jpg", width: 640, height: 480 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/mos-design-ild0babk0Q0-unsplash.jpg", width: 640, height: 427 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/pawel-czerwinski-blD64oKLHXU-unsplash.jpg", width: 640, height: 789 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/peter-amende-XxteOm21HOw-unsplash.jpg", width: 640, height: 960 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/reza-madani-ohdJdcO9-Tc-unsplash.jpg", width: 640, height: 683 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/saleh-yQ84oCgUdOo-unsplash.jpg", width: 640, height: 427 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/yuri-krupenin-qB-MKKLRwBc-unsplash.jpg", width: 640, height: 480 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/barthelemy-de-mazenod-rRLZZ8BHZNo-unsplash.jpg", width: 640, height: 966 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/benoit-deschasaux-WSsW8EpMaeQ-unsplash.jpg", width: 640, height: 845 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/blaire-harmon-HkG8cOpvUkU-unsplash.jpg", width: 640, height: 727 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/catia-dombaxe-cPFYcoMAi-I-unsplash.jpg", width: 640, height: 795 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/louis-maniquet-Ae64KHAzt1I-unsplash.jpg", width: 640, height: 427 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/clement-proust-m3StSUrsi3I-unsplash.jpg", width: 640, height: 427 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/hannah-grace-znL3MUoOOtg-unsplash.jpg", width: 640, height: 341 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/jovan-vasiljevic-D9SD5wciKtU-unsplash.jpg", width: 640, height: 693 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/jubeo-hernandez-5ajzXUSb-q4-unsplash.jpg", width: 640, height: 735 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/kit-suman-WQwtk_t4oJI-unsplash.jpg", width: 640, height: 382 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/koushik-chowdavarapu-Zjd6NvWUf5k-unsplash.jpg", width: 640, height: 427 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/nicola-richli-6NOHq2HWxRU-unsplash.jpg", width: 640, height: 762 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/noam-cohen-_dAXhRuNhDM-unsplash.jpg", width: 640, height: 750 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/marcus-lenk-JQAiksStApk-unsplash.jpg", width: 640, height: 968 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/ray-hennessy-6-JIDCnZG2E-unsplash.jpg", width: 640, height: 426 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/elyssa-fahndrich-MF16lGb95WY-unsplash.jpg", width: 640, height: 866 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/ray-hennessy-jN5pk0lbv4E-unsplash.jpg", width: 640, height: 426 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/henry-be-IicyiaPYGGI-unsplash.jpg", width: 640, height: 263 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/robert-nelson-9H3WouBtk0U-unsplash.jpg", width: 640, height: 427 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/zhivko-minkov-lAvtYSgNSfY-unsplash.jpg", width: 640, height: 641 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/clay-banks-RRjC0r8GwpI-unsplash.jpg", width: 640, height: 427 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/cristina-gottardi-CSpjU6hYo_0-unsplash.jpg", width: 640, height: 226 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/sebastian-boring-1s66d5yY5gE-unsplash.jpg", width: 640, height: 640 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/cristina-gottardi-KX_214Qr7Ko-unsplash.jpg", width: 640, height: 960 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/daniel-lerman-7bZi3hfM_Pc-unsplash.jpg", width: 640, height: 280 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/meg-BSfxs8o7wkg-unsplash.jpg", width: 640, height: 861 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/di-an-yAjzHx986fQ-unsplash.jpg", width: 640, height: 864 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/fadhil-abhimantra-OLWz1lhO_54-unsplash.jpg", width: 640, height: 800 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/jose-fuentes-1RWd2nKjq04-unsplash.jpg", width: 640, height: 427 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/lucas-gallone-lJ5nW8PrfCU-unsplash.jpg", width: 640, height: 974 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/andrea-de-santis-KF52HaIDtyM-unsplash.jpg", width: 640, height: 640 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/annie-spratt-VfXZg_-8f6A-unsplash.jpg", width: 640, height: 370 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/daniel-j-schwarz-6oKyf2Pip6Y-unsplash.jpg", width: 640, height: 650 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/iskra-photography-KH84oeK05xE-unsplash.jpg", width: 640, height: 376 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/jacek-kadaj-d5l_C354BHU-unsplash.jpg", width: 640, height: 370 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/mark-harpur-K2s_YE031CA-unsplash.jpg", width: 640, height: 427 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/andrew-keymaster-KiXccYM2eQo-unsplash.jpg", width: 640, height: 896 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/vishwasa-navada-k-SMSzt8_xVeM-unsplash.jpg", width: 640, height: 698 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/clay-banks-X1vQu69kV48-unsplash.jpg", width: 640, height: 427 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/olegs-jonins-c5c2d84cjK8-unsplash.jpg", width: 640, height: 641 },
+  { src: "https://webkit.org/demos/grid3/photos/photos/clark-van-der-beken-IImZQk78xe0-unsplash.jpg", width: 640, height: 353 },
+]
 ---
 
 <Layout>
-  <div>
-    <img class="w-[100px] h-auto bg-amber-200" width="816" height="1456" src="https://qn.sukoshi.xyz/project-p/photos/0_1.jpeg" />
-  </div>
-
-  <button id="toggle-btn" class="py-2 px-4 bg-amber-100 cursor-pointer">toggle</button>
-  <img class="old-image view-image w-[300px] h-[200px] block object-cover" src="https://qn.sukoshi.xyz/project-p/photos/0_1.jpeg" />
-  <img class="new-image opacity-0 w-auto h-8/10" src="https://qn.sukoshi.xyz/project-p/photos/0_1.jpeg" />
+  <MasonryLayout client:only="solid" photos={photos} />
 </Layout>
-
-<script>
-  const oldImage = document.querySelector('.old-image');
-  const newImage = document.querySelector('.new-image');
-  const toggleBtn = document.getElementById('toggle-btn') as HTMLButtonElement;
-
-  toggleBtn.addEventListener('click', () => {
-    document.startViewTransition(() => {
-      oldImage!.classList.toggle('view-image');
-      newImage!.classList.toggle('view-image');
-      oldImage!.classList.toggle('opacity-0');
-      newImage!.classList.toggle('opacity-0');
-    });
-  });
-</script>
-
-<style>
-  .view-image {
-    view-transition-name: view-image;  
-    contain: layout;
-  }
-
-  .new-image {
-    position: fixed;
-    inset-block: 0;
-    margin: auto;
-    right: 80px;
-  }
-
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation-duration: 5500ms;
-  }
-
-  ::view-transition-group(view-image) {
-    opacity: 0;
-  }
-  ::view-transition-old(view-image),
-  ::view-transition-new(view-image) {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-  }
-</style>
