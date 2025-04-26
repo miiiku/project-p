@@ -2,7 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import MasonryLayout from "../../components/MasonryLayout";
 
-const response = await fetch("https://qn.sukoshi.xyz/project-p/albums.json");
+const response = await fetch("https://qn.sukoshi.xyz/project-p/photos.json");
 const data = await response.json();
 const photos = data || [];
 
@@ -91,5 +91,11 @@ const photos = data || [];
 ---
 
 <Layout>
-  <MasonryLayout client:only="solid" photos={photos}></MasonryLayout>
+  <MasonryLayout
+    client:only="solid"
+    showPreview={true}
+    wrapperClass="photo-list"
+    itemClass="photo-item"
+    photos={photos}
+  />
 </Layout>

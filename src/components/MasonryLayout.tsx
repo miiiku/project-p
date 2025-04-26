@@ -1,8 +1,13 @@
-import { For, createEffect, createSignal, onMount } from "solid-js";
-import useMediaQuery from '../hooks/useMediaQuery';
+import { For, Show, createEffect, createSignal, onMount } from "solid-js";
+import useMediaQuery from "../hooks/useMediaQuery";
+import PhotoItem from "./render/PhotoItem";
+import ScrollPreview from "./ScrollPreview";
 
 type Props = {
   photos: Photo[],
+  showPreview?: boolean,
+  wrapperClass?: string,
+  itemClass?: string,
 }
 
 type LayoutItem = {
@@ -31,7 +36,7 @@ export default function MasonryLayout(props: Props) {
       layout.push({ photos: [], height: 0 });
     }
 
-    props.photos.forEach((photo) => {
+    props.photos.forEach((photo, index) => {
       const minCol = layout.reduce((min, col, i) => col.height < layout[min].height ? i : min, 0);
       const col = layout[minCol];
       const { width, height } = photo?.info || { width: 0, height: 0 };
@@ -42,71 +47,41 @@ export default function MasonryLayout(props: Props) {
        * 如果某一列的图片数量比其他列多，那么他获得的边距也就比其他列更多，导致在界面呈现上，可能反而会更高
        * 把所有边距去掉即可看到正确的渲染结果
        */
-      col.photos.push(photo);
+      col.photos.push({ ...photo, index });
       col.height += heightRate;
     })
 
     setLayout(layout);
   }
 
-  const renderItem = (photo: any) => (
-    <figure>
-      <div
-        style={{
-          "background-color": photo.color,
-          "background-image": `url(${photo.src}-tiny.bmp)`,
-        }}
-        class="rounded bg-no-repeat bg-cover bg-center overflow-hidden"
-      >
-        <img
-          loading="lazy"
-          class="block w-full h-auto object-cover"
-          alt={photo.name}
-          src={`${photo.src}-1024w.webp`}
-          width={photo.info?.width}
-          height={photo.info?.height}
-          sizes="
-            (max-width: 768px) 100vw,
-            (max-width: 1366px) 50vw,
-            (min-width: 1367px) 33vw,
-            100vw
-          "
-          srcset={`
-            ${photo.src}-360w.webp 360w,
-            ${photo.src}-480w.webp 480w,
-            ${photo.src}-640w.webp 640w,
-            ${photo.src}-800w.webp 800w,
-            ${photo.src}-1024w.webp 1024w,
-            ${photo.src}-1280w.webp 1280w,
-            ${photo.src}-1440w.webp 1440w,
-            ${photo.src}-1920w.webp 1920w,
-            ${photo.src}-2560w.webp 2560w
-          `}
-        />
-      </div>
-    </figure>
-  )
-
   createEffect(() => {
     setCols(colsMap[media()] ?? 3);
     calcLayout();
-  })
+  });
 
-
-  onMount(() => {
-    calcLayout();
-  })
+  onMount(() => calcLayout());
 
   return (
-    <div class="masonry-layout" style={{ '--col-count': cols(), '--col-gap': '24px', '--row-gap': '24px' }}>
+    <>
+    <div
+      classList={{
+        'masonry-layout': true,
+        [props.wrapperClass ?? '']: true,
+      }}
+      style={{
+        '--col-count': cols(),
+        '--col-gap': '24px',
+        '--row-gap': '24px',
+      }}
+    >
       <div class="masonry-wrapper grid grid-cols-[repeat(var(--col-count),minmax(0,1fr))] gap-x-(--col-gap) items-start">
         <For each={layout()}>
           {(layout) => (
             <section class="masonry-col grid grid-cols-1 auto-rows-auto gap-y-(--row-gap)">
               <For each={layout.photos}>
                 {(photo) => (
-                  <div class="masonry-item">
-                    {renderItem(photo)}
+                  <div classList={{ "masonry-item": true, [props.itemClass ?? '']: true }} data-index={photo.index}>
+                    <PhotoItem photo={photo} />
                   </div>
                 )}
               </For>
@@ -115,5 +90,10 @@ export default function MasonryLayout(props: Props) {
         </For>
       </div>
     </div>
+
+    <Show when={props.showPreview} keyed>
+      <ScrollPreview wrapper={props.wrapperClass ?? ''} item={props.itemClass ?? ''} photos={props.photos} />
+    </Show>
+    </>
   )
 }

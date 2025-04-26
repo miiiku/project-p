@@ -55,6 +55,7 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
   onMount(() => {
     // 服务目标绑定代理事件，用来唤起scroll priview组件
     serviceTargetRoot = document.querySelector(`.${props.wrapper}`) as HTMLDivElement;
+    if (!serviceTargetRoot) return;
     serviceTargetRoot.addEventListener('click', handleShow);
   });
 
