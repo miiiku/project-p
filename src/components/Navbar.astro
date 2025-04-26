@@ -44,6 +44,16 @@ const hasActiveNavClass = (path: string) => {
     <li>
       <a
         class="navbar-item"
+        href="/live"
+        class:list={hasActiveNavClass("/live")}
+      >
+        <span>Live</span>
+        <span>🎬</span>
+      </a>
+    </li>
+    <li>
+      <a
+        class="navbar-item"
         href="/about"
         class:list={hasActiveNavClass("/about")}
       >

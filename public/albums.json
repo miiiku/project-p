@@ -1602,47 +1602,6 @@
     }
   },
   {
-    "name": "IMG_2474",
-    "src": "https://qn.sukoshi.xyz/project-p/photos/IMG_2474.jpeg",
-    "info": {
-      "size": 2704088,
-      "format": "jpeg",
-      "width": 3024,
-      "height": 4032,
-      "colorModel": "ycbcr",
-      "orientation": "Top-left"
-    },
-    "color": "#8a8e91",
-    "exif": {
-      "GPSLatitude": "25, 44, 40.52",
-      "GPSLatitudeRef": "N",
-      "GPSLongitude": "100,  8, 49.32",
-      "GPSLongitudeRef": "E",
-      "Make": "Apple",
-      "Model": "iPhone 13",
-      "FocalLength": "5.1 mm",
-      "FNumber": "f/1.6",
-      "ExposureTime": "1/3876 sec.",
-      "ISOSpeedRatings": "50",
-      "DateTime": "2023:10:01 14:20:57"
-    },
-    "thumb_img": "data:image/bmp;base64,Qk2KAQAAAAAAAIoAAAB8AAAACAAAAAgAAAABACAAAwAAAAABAAASCwAAEgsAAAAAAAAAAAAAAAD/AAD/AAD/AAAAAAAA/0JHUnOAwvUoYLgeFSCF6wFAMzMTgGZmJkBmZgagmZkJPArXAyRcjzIAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAoZeR/6GYkf+hmJL/oZiS/6GYkv+gmJL/n5iS/56Xkf+flY//n5WP/56WkP+dlpD/nJWQ/5uVj/+alY//mJSO/56Ujf+dlI7/nJSO/5uUjv+Zk47/l5KN/5WSjP+TkYv/npWO/52Vjv+blI3/mZON/5eSjP+VkYv/kpCK/5COif+hl4//n5aP/52Vjv+alI3/l5KM/5SRiv+Rj4n/jo6H/6abkv+jmpH/oJiQ/52Wjv+ZlI3/lpKL/5KQif+Pjof/rKGW/6mflf+lnZP/oZqR/52Xj/+ZlYz/lpKK/5KQiP+0qJz/sKWa/6yil/+nn5T/o5yR/5+Zj/+bloz/l5SK/w==",
-    "location_map": "https://qn.sukoshi.xyz/project-p/maps/IMG_2474.png",
-    "location_info": {
-      "formatted_address": "云南省大理白族自治州大理市银桥镇大丽线",
-      "adcode": "532901",
-      "city": "大理白族自治州",
-      "citycode": "0872",
-      "country": "中国",
-      "district": "大理市",
-      "province": "云南省",
-      "towncode": "532901107000",
-      "township": "银桥镇",
-      "streetName": "环海西路",
-      "streetNumber": "43号"
-    }
-  },
-  {
     "name": "IMG_4359",
     "src": "https://qn.sukoshi.xyz/project-p/photos/IMG_4359.jpeg",
     "info": {
