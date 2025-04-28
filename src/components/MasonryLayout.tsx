@@ -63,37 +63,37 @@ export default function MasonryLayout(props: Props) {
 
   return (
     <>
-    <div
-      classList={{
-        'masonry-layout': true,
-        [props.wrapperClass ?? '']: true,
-      }}
-      style={{
-        '--col-count': cols(),
-        '--col-gap': '24px',
-        '--row-gap': '24px',
-      }}
-    >
-      <div class="masonry-wrapper grid grid-cols-[repeat(var(--col-count),minmax(0,1fr))] gap-x-(--col-gap) items-start">
-        <For each={layout()}>
-          {(layout) => (
-            <section class="masonry-col grid grid-cols-1 auto-rows-auto gap-y-(--row-gap)">
-              <For each={layout.photos}>
-                {(photo) => (
-                  <div classList={{ "masonry-item": true, [props.itemClass ?? '']: true }} data-index={photo.index}>
-                    <PhotoItem photo={photo} />
-                  </div>
-                )}
-              </For>
-            </section>
-          )}
-        </For>
+      <div
+        classList={{
+          'masonry-layout': true,
+          [props.wrapperClass ?? '']: true,
+        }}
+        style={{
+          '--col-count': cols(),
+          '--col-gap': '24px',
+          '--row-gap': '24px',
+        }}
+      >
+        <div class="masonry-wrapper grid grid-cols-[repeat(var(--col-count),minmax(0,1fr))] gap-x-(--col-gap) items-start">
+          <For each={layout()}>
+            {(layout) => (
+              <section class="masonry-col grid grid-cols-1 auto-rows-auto gap-y-(--row-gap)">
+                <For each={layout.photos}>
+                  {(photo) => (
+                    <div classList={{ "masonry-item": true, [props.itemClass ?? '']: true }} data-index={photo.index}>
+                      <PhotoItem photo={photo} />
+                    </div>
+                  )}
+                </For>
+              </section>
+            )}
+          </For>
+        </div>
       </div>
-    </div>
 
-    <Show when={props.showPreview} keyed>
-      <ScrollPreview wrapper={props.wrapperClass ?? ''} item={props.itemClass ?? ''} photos={props.photos} />
-    </Show>
+      <Show when={props.showPreview} keyed>
+        <ScrollPreview wrapper={props.wrapperClass ?? ''} item={props.itemClass ?? ''} photos={props.photos} />
+      </Show>
     </>
   )
 }

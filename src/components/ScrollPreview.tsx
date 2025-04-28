@@ -2,6 +2,7 @@ import { createSignal, Index, onCleanup, onMount, Show } from "solid-js";
 import { getTarget, throttle } from "../utils";
 
 import Popover from './Popover';
+import PhotoShow from "./render/PhotoShow";
 
 export default function ScrollPreview(props: { wrapper: string, item: string, photos: Photo[] }) {
   let serviceTargetRoot: HTMLDivElement;
@@ -19,7 +20,7 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
 
   const actPhoto = () => props.photos[actIdx()] || {};
 
-  const upldateScrollbar = () => {
+  const updateScrollBar = () => {
     // 更新滚动条
     const count = props.photos.length;
     const clientHeight = window.innerHeight || 0;
@@ -35,12 +36,18 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
     }
   }
 
+  const updateViewBg = () => {
+    const { color, src } = actPhoto();
+    scrollPreviewRef.style.backgroundColor = color;
+    scrollPreviewRef.style.backgroundImage = `url(${src}-640w.webp)`;
+  }
+
   const setSafeIdx = (idx: number) => {
     const safeIdx = Math.max(0, Math.min(props.photos.length - 1, idx));
     setActIdx(safeIdx);
-    upldateScrollbar();
+    updateViewBg();
+    updateScrollBar();
   }
- 
 
   onCleanup(() => {
     document.body.style.overflow = 'auto';
@@ -100,7 +107,7 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
     resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         if (entry.target === scrollPreviewRef) {
-          resizeObserverInit && upldateScrollbar();
+          resizeObserverInit && updateScrollBar();
           resizeObserverInit = true;
         }
       }
@@ -132,28 +139,12 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
     }
   }
 
-  const renderPhotoView = () => {
-    // 更新背景
-    const { color, src, name } = actPhoto();
-    scrollPreviewRef.style.backgroundColor = color;
-    scrollPreviewRef.style.backgroundImage = `url(${src}-640w.webp)`;
-
-    return (
-      <img
-        alt={name}
-        src={src}
-        style={{ "background-image": `url(${src}-tiny.bmp)` }}
-        class="preview-image object-cover block max-w-full max-h-full bg-no-repeat bg-cover bg-center"
-      />
-    )
-  }
-
   return (
     <div ref={el => scrollPreviewRef = el} popover="manual" class="scroll-preview fixed size-full inset-0 bg-no-repeat bg-center bg-cover bg-white dark:bg-gray-800">
       <div class="preview-wrapper backdrop-blur-[30px] size-full pt-10 pr-22 pb-4 pl-6 grid grid-cols-1 grid-rows-[1fr_auto] gap-y-4">
         {/* photo view */}
         <div class="preview-main size-full flex justify-center items-center overflow-hidden">
-          { renderPhotoView() }
+          <PhotoShow photo={actPhoto()} />
         </div>
 
         {/* photo info mix-blend-difference */}

@@ -6,44 +6,6 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout>
-  <div class="w-min mx-auto rounded-xl p-4 bg-stone-800/5 dark:bg-stone-100/5">
-    <div class="w-[300px] h-[400px] mx-auto rounded-xl overflow-hidden">
-      <div
-        class="size-full"
-        data-live-photo
-        data-photo-src="https://qn.sukoshi.xyz/project-p/photos/IMG_2474.jpeg"
-        data-video-src="https://qn.sukoshi.xyz/project-p/lives/IMG_2474.mov"
-        data-proactively-loads-video="true">
-      </div>
-    </div>
-  </div>
+  <div class="text-center py-3">hello antler</div>
 </Layout>
 
-<script is:inline src="https://cdn.apple-livephotoskit.com/lpk/1/livephotoskit.js"></script>
-
-<!-- <script>
-
-    import * as LivePhotosKit from "livephotoskit";
-
-    const wapper = document.querySelector('[data-live-photo]') as HTMLElement;
-    
-    const player = LivePhotosKit.Player(wapper);
-
-    // Listen to events the player emits.
-    player.addEventListener('canplay', evt => {
-      console.log('player ready', evt);
-      // player.play();
-    });
-
-    player.addEventListener('ended', evt => console.log('player finished playing through', evt));
-
-    player.addEventListener('error', (ev) => {
-      console.log('error', ev, ev.detail);
-    })
-
-    // Use the playback controls.
-    player.playbackStyle = LivePhotosKit.PlaybackStyle.HINT;
-    player.playbackStyle = LivePhotosKit.PlaybackStyle.FULL;
-
-
-</script> -->
