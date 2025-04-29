@@ -1,4 +1,4 @@
-import { createEffect, createMemo, Match, Show, Switch } from "solid-js";
+import { createEffect, Match, Show, Switch } from "solid-js";
 import * as LivePhotoKit from 'livephotoskit';
 
 {/* <script is:inline src="https://cdn.apple-livephotoskit.com/lpk/1/livephotoskit.js"></script> */}

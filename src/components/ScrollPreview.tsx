@@ -141,7 +141,7 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
 
   return (
     <div ref={el => scrollPreviewRef = el} popover="manual" class="scroll-preview fixed size-full inset-0 bg-no-repeat bg-center bg-cover bg-white dark:bg-gray-800">
-      <div class="preview-wrapper backdrop-blur-[30px] size-full pt-10 pr-22 pb-4 pl-6 grid grid-cols-1 grid-rows-[1fr_auto] gap-y-4">
+      <div class="preview-wrapper backdrop-blur-[30px] size-full pt-10 pr-28 pb-4 pl-6 grid grid-cols-1 grid-rows-[1fr_auto] gap-y-4">
         {/* photo view */}
         <div class="preview-main size-full flex justify-center items-center overflow-hidden">
           <PhotoShow photo={actPhoto()} />
