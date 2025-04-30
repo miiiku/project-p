@@ -11,28 +11,39 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
   let resizeObserverInit: boolean = false;
   let resizeObserver: ResizeObserver;
 
-  const blockSize: number = 64;
-  const blockGap: number = 12;
+  const maxThumbSize: number = 64;
+  const minThumbSize: number = 32;
+  const maxThumbGap: number = 12;
+  const minThumbGap: number = 6;
 
   const [open, setOpen] = createSignal(false);
   const [actIdx, setActIdx] = createSignal(0);
-  const [scrollY, setScrollY] = createSignal(0);
 
   const actPhoto = () => props.photos[actIdx()] || {};
 
   const updateScrollBar = () => {
     // 更新滚动条
     const count = props.photos.length;
+    const clientWidth = window.innerWidth || 0;
     const clientHeight = window.innerHeight || 0;
-    const scrollHeight = (blockSize + blockGap) * count + blockGap;
+    const minLength = Math.min(clientWidth, clientHeight);
+
+    const thumbSize = Math.max(minThumbSize, Math.min(maxThumbSize, minLength / 12));
+    const thumbGap = Math.max(minThumbGap, Math.min(maxThumbGap, minLength / 45));
+    const scrollHeight = (thumbSize + thumbGap) * count + thumbGap;
+
+    scrollPreviewRef.style.setProperty('--thumb-size', `${thumbSize}`);
+    scrollPreviewRef.style.setProperty('--thumb-gap', `${thumbGap}`);
+    scrollPreviewRef.style.setProperty('--scrollbar-width', `${thumbSize + thumbGap}`);
 
     if (scrollHeight <= clientHeight) {
       const offset = (clientHeight - scrollHeight) / 2;
-      setScrollY(-offset);
+      scrollPreviewRef.style.setProperty('--scroll-y', `${-offset}`);
     } else {
-      const actOffset = (blockSize + blockGap) * actIdx() + blockGap + blockSize / 2;
+      const actOffset = (thumbSize + thumbGap) * actIdx() + thumbGap + thumbSize / 2;
       const y = actOffset - clientHeight / 2;
-      setScrollY(Math.max(0, Math.min(scrollHeight - clientHeight, y)));
+      const offset = Math.max(0, Math.min(scrollHeight - clientHeight, y));
+      scrollPreviewRef.style.setProperty('--scroll-y', `${offset}`);
     }
   }
 
@@ -208,16 +219,16 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
 
       {/* right scroll bar */}
       <div class="scrollbar-wrapper absolute inset-y-0 right-0">
-        <ul class="scrollbar relative w-22 h-full overflow-y-clip bg-stone-800/5">
+        <ul class="scrollbar relative w-[calc(var(--scrollbar-width)*1px)] h-full overflow-y-clip bg-zinc-50/20">
           <Index each={props.photos} fallback={<div>Loading...</div>}>
             {
               (photo, index) => (
                 <li
-                  class="scrollbar-item absolute inset-x-0 mx-auto size-16 cursor-pointer rounded origin-right transition-transform overflow-hidden"
+                  class="scrollbar-item absolute inset-x-0 mx-auto size-[calc(var(--thumb-size)*1px)] cursor-pointer rounded origin-right transition-transform overflow-hidden"
                   style={{
                     transform: `
-                      translate3d(0, ${index * (blockSize + blockGap) + blockGap - scrollY()}px, 0)
-                      scale(${actIdx() === index ? 1.26 : 1}
+                      translate3d(0, calc((${index} * (var(--thumb-size) + var(--thumb-gap)) + var(--thumb-gap) - var(--scroll-y)) * 1px), 0)
+                      scale(${actIdx() === index ? 1.26 : 1})
                     `
                   }}
                 >
