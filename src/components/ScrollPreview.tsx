@@ -1,6 +1,8 @@
-import { createSignal, Index, onCleanup, onMount, Show } from "solid-js";
+import { createSignal, onCleanup, onMount, Show } from "solid-js";
 import { getTarget, throttle } from "../utils";
+import useEventBus from "../hooks/useEventBus.ts";
 
+import ScrollBar from "./ScrollBar";
 import Popover from './Popover';
 import PhotoShow from "./render/PhotoShow";
 
@@ -8,44 +10,13 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
   let serviceTargetRoot: HTMLDivElement;
   let scrollPreviewRef: HTMLDivElement;
 
-  let resizeObserverInit: boolean = false;
-  let resizeObserver: ResizeObserver;
-
-  const maxThumbSize: number = 64;
-  const minThumbSize: number = 32;
-  const maxThumbGap: number = 12;
-  const minThumbGap: number = 6;
+  const { emit, addEvent, removeEvent } = useEventBus();
 
   const [open, setOpen] = createSignal(false);
   const [actIdx, setActIdx] = createSignal(0);
+  const [scrollBarDir, setScrollBarDir] = createSignal('h');
 
   const actPhoto = () => props.photos[actIdx()] || {};
-
-  const updateScrollBar = () => {
-    // 更新滚动条
-    const count = props.photos.length;
-    const clientWidth = window.innerWidth || 0;
-    const clientHeight = window.innerHeight || 0;
-    const minLength = Math.min(clientWidth, clientHeight);
-
-    const thumbSize = Math.max(minThumbSize, Math.min(maxThumbSize, minLength / 12));
-    const thumbGap = Math.max(minThumbGap, Math.min(maxThumbGap, minLength / 45));
-    const scrollHeight = (thumbSize + thumbGap) * count + thumbGap;
-
-    scrollPreviewRef.style.setProperty('--thumb-size', `${thumbSize}`);
-    scrollPreviewRef.style.setProperty('--thumb-gap', `${thumbGap}`);
-    scrollPreviewRef.style.setProperty('--scrollbar-width', `${thumbSize + thumbGap}`);
-
-    if (scrollHeight <= clientHeight) {
-      const offset = (clientHeight - scrollHeight) / 2;
-      scrollPreviewRef.style.setProperty('--scroll-y', `${-offset}`);
-    } else {
-      const actOffset = (thumbSize + thumbGap) * actIdx() + thumbGap + thumbSize / 2;
-      const y = actOffset - clientHeight / 2;
-      const offset = Math.max(0, Math.min(scrollHeight - clientHeight, y));
-      scrollPreviewRef.style.setProperty('--scroll-y', `${offset}`);
-    }
-  }
 
   const updateViewBg = () => {
     const { color, src } = actPhoto();
@@ -57,21 +28,24 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
     const safeIdx = Math.max(0, Math.min(props.photos.length - 1, idx));
     setActIdx(safeIdx);
     updateViewBg();
-    updateScrollBar();
+  }
+
+  const handleScrollBarDir = ({ detail }: CustomEvent) => {
+    setScrollBarDir(detail);
   }
 
   onCleanup(() => {
     document.body.style.overflow = 'auto';
     document.removeEventListener('wheel', filterScrollEvent);
     document.removeEventListener('keyup', handleKeyUp);
-    resizeObserver?.disconnect();
 
+    removeEvent('scrollbar-dir', handleScrollBarDir);
     // 组件被销毁后，注销服务目标绑定的代理事件
     serviceTargetRoot.removeEventListener('mousedown', handleShow);
   });
 
   onMount(() => {
-    // 服务目标绑定代理事件，用来唤起scroll priview组件
+    // 服务目标绑定代理事件，用来唤起scroll preview组件
     serviceTargetRoot = document.querySelector(`.${props.wrapper}`) as HTMLDivElement;
     if (!serviceTargetRoot) return;
     serviceTargetRoot.addEventListener('click', handleShow);
@@ -91,10 +65,12 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
 
     if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
       setSafeIdx(actIdx() - 1);
+      emit('preview-page-change', 'lt');
     }
 
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
       setSafeIdx(actIdx() + 1);
+      emit('preview-page-change', 'rb');
     }
   }
 
@@ -115,17 +91,7 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
     document.addEventListener('wheel', filterScrollEvent);
     document.addEventListener('keyup', handleKeyUp);
 
-    resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.target === scrollPreviewRef) {
-          resizeObserverInit && updateScrollBar();
-          resizeObserverInit = true;
-        }
-      }
-    });
-
-    resizeObserverInit = false;
-    resizeObserver.observe(scrollPreviewRef);
+    addEvent('scrollbar-dir', handleScrollBarDir);
 
     setSafeIdx(index);
   }
@@ -136,7 +102,8 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
     document.body.style.overflow = 'auto';
     document.removeEventListener('wheel', filterScrollEvent);
     document.removeEventListener('keyup', handleKeyUp);
-    resizeObserver?.disconnect();
+
+    removeEvent('scrollbar-dir', handleScrollBarDir);
 
     // 让当前展示图片对应的画廊图片滚动到中心位置
     const selector = `.${props.item}[data-index='${actIdx()}']`;
@@ -152,7 +119,7 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
 
   return (
     <div ref={el => scrollPreviewRef = el} popover="manual" class="scroll-preview fixed size-full inset-0 bg-no-repeat bg-center bg-cover bg-white dark:bg-gray-800">
-      <div class="preview-wrapper backdrop-blur-[30px] size-full pt-10 pr-28 pb-4 pl-6 grid grid-cols-1 grid-rows-[1fr_auto] gap-y-4">
+      <div class="preview-wrapper backdrop-blur-[30px] size-full pt-10 pb-4 px-4 grid grid-cols-1 grid-rows-[1fr_auto] gap-y-4">
         {/* photo view */}
         <div class="preview-main size-full flex justify-center items-center overflow-hidden">
           <PhotoShow photo={actPhoto()} />
@@ -217,27 +184,13 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
         </div>
       </div>
 
-      {/* right scroll bar */}
-      <div class="scrollbar-wrapper absolute inset-y-0 right-0">
-        <ul class="scrollbar relative w-[calc(var(--scrollbar-width)*1px)] h-full overflow-y-clip bg-zinc-50/20">
-          <Index each={props.photos} fallback={<div>Loading...</div>}>
-            {
-              (photo, index) => (
-                <li
-                  class="scrollbar-item absolute inset-x-0 mx-auto size-[calc(var(--thumb-size)*1px)] cursor-pointer rounded origin-right transition-transform overflow-hidden"
-                  style={{
-                    transform: `
-                      translate3d(0, calc((${index} * (var(--thumb-size) + var(--thumb-gap)) + var(--thumb-gap) - var(--scroll-y)) * 1px), 0)
-                      scale(${actIdx() === index ? 1.26 : 1})
-                    `
-                  }}
-                >
-                  <img class="scrollbar-img block w-full h-full object-cover" src={`${photo().src}-120w.webp`} alt={photo().name} />
-                </li>
-              )
-            }
-          </Index>
-        </ul>
+      {/* scroll bar */}
+      <div classList={{
+        'absolute': true,
+        'inset-y-0 right-0': scrollBarDir() === 'y',
+        'inset-x-0 bottom-0': scrollBarDir() === 'x',
+      }}>
+        <ScrollBar index={actIdx()} photos={props.photos} />
       </div>
     </div>
   )

@@ -45,7 +45,7 @@ function RenderPhoto(props: Props) {
     <Show when={props.photo} keyed>
       {
         photo => (
-          <figure>
+          <figure class="size-full flex justify-center items-center">
             <img
               alt={photo.name}
               src={photo.src}
@@ -55,7 +55,7 @@ function RenderPhoto(props: Props) {
                 "background-color": photo.color,
                 "background-image": `url(${photo.src}-tiny.bmp)`
               }}
-              class="preview-image object-cover block max-w-full max-h-full bg-no-repeat bg-cover bg-center"
+              class="preview-image object-contain block w-auto h-auto max-w-full max-h-full bg-no-repeat bg-cover bg-center"
             />
           </figure>
         )

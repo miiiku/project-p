@@ -3,7 +3,7 @@
   --content-width: min(1660px, 100%);
 
   /** 主题容器间距 */
-  --gutter-width: 40px;
+  --gutter-width: 32px;
 }
 
 .repeating-linear-gradiend-bg {

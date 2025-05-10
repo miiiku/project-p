@@ -10,7 +10,7 @@ const hasActiveNavClass = (path: string) => {
 ---
 
 <nav class="navbar-container">
-  <div>
+  <div class="hidden sm:block">
     <LogoSvg />
   </div>
 
@@ -21,7 +21,8 @@ const hasActiveNavClass = (path: string) => {
         <span>🔥</span>
       </a>
     </li>
-    <li>
+
+    <li class="hidden sm:block">
       <a
         class="navbar-item"
         href="/latest"
@@ -31,7 +32,8 @@ const hasActiveNavClass = (path: string) => {
         <span>🕙</span>
       </a>
     </li>
-    <li>
+
+    <li class="hidden sm:block">
       <a
         class="navbar-item"
         href="/manage"
@@ -41,6 +43,7 @@ const hasActiveNavClass = (path: string) => {
         <span>⚙️</span>
       </a>
     </li>
+
     <li>
       <a
         class="navbar-item"

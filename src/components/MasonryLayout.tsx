@@ -1,5 +1,6 @@
 import { For, Show, createEffect, createSignal, onMount } from "solid-js";
 import useMediaQuery from "../hooks/useMediaQuery";
+import useEventBus from "../hooks/useEventBus.ts";
 import PhotoItem from "./render/PhotoItem";
 import ScrollPreview from "./ScrollPreview";
 
@@ -20,6 +21,7 @@ export default function MasonryLayout(props: Props) {
   const [layout, setLayout] = createSignal<LayoutItem[]>([]);
 
   const media = useMediaQuery();
+  const { addEvent, removeEvent } = useEventBus();
 
   const colsMap: Record<string, number> = {
     'sm': 1,
@@ -60,6 +62,10 @@ export default function MasonryLayout(props: Props) {
   });
 
   onMount(() => calcLayout());
+
+  addEvent('preview-page-change', ({ detail }: CustomEvent) => {
+    console.log(detail);
+  });
 
   return (
     <>
