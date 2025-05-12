@@ -18,7 +18,7 @@ export default function PhotoItem(props: Props) {
         }}
         class="relative rounded bg-no-repeat bg-cover bg-center overflow-hidden"
       >
-        <Show when={photo.live_video} keyed>
+        <Show when={photo.live_video}>
           <div class="absolute top-0 left-0">
             <LiveBadege />
           </div>

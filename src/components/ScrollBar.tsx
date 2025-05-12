@@ -1,4 +1,4 @@
-import {createEffect, createSignal, Index, onCleanup, onMount} from "solid-js";
+import { createEffect, createMemo, createSignal, Index, onCleanup, onMount } from "solid-js";
 import useEventBus from "../hooks/useEventBus.ts";
 
 export default function ScrollBar(props: { index: number, photos: Photo[] }) {
@@ -16,6 +16,7 @@ export default function ScrollBar(props: { index: number, photos: Photo[] }) {
 
   const updateScrollBar = () => {
     // 更新滚动条
+    const index = props.index;
     const count = props.photos.length;
     const clientWidth = window.innerWidth || 0;
     const clientHeight = window.innerHeight || 0;
@@ -38,19 +39,20 @@ export default function ScrollBar(props: { index: number, photos: Photo[] }) {
       const offset = (targetLen - scrollLen) / 2;
       scrollBarRootRef.style.setProperty('--scroll-offset', `${-offset}`);
     } else {
-      const actOffset = (thumbSize + thumbGap) * props.index + thumbGap + thumbSize / 2;
+      const actOffset = (thumbSize + thumbGap) * index + thumbGap + thumbSize / 2;
       const y = actOffset - targetLen / 2;
       const offset = Math.max(0, Math.min(scrollLen - targetLen, y));
       scrollBarRootRef.style.setProperty('--scroll-offset', `${offset}`);
     }
   }
 
-  createEffect(() => {
-    emit('scrollbar-dir', barDir());
-    updateScrollBar();
-  })
+  const handleToPhoto = (idx: number) => {
+    emit('scrollbar-to-photo', idx);
+  }
 
   onMount(() => {
+    createEffect(() => emit('scrollbar-dir', barDir()));
+    createMemo(() => updateScrollBar());
     resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         if (entry.target === scrollBarRootRef) {
@@ -91,6 +93,7 @@ export default function ScrollBar(props: { index: number, photos: Photo[] }) {
                     scale(${props.index === index ? 1.26 : 1})
                   `
                 }}
+                onClick={() => handleToPhoto(index)}
               >
                 <img
                   class="scrollbar-img block w-full h-full object-cover"

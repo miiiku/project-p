@@ -1,6 +1,5 @@
 import { For, Show, createEffect, createSignal, onMount } from "solid-js";
 import useMediaQuery from "../hooks/useMediaQuery";
-import useEventBus from "../hooks/useEventBus.ts";
 import PhotoItem from "./render/PhotoItem";
 import ScrollPreview from "./ScrollPreview";
 
@@ -21,7 +20,6 @@ export default function MasonryLayout(props: Props) {
   const [layout, setLayout] = createSignal<LayoutItem[]>([]);
 
   const media = useMediaQuery();
-  const { addEvent, removeEvent } = useEventBus();
 
   const colsMap: Record<string, number> = {
     'sm': 1,
@@ -56,24 +54,17 @@ export default function MasonryLayout(props: Props) {
     setLayout(layout);
   }
 
-  createEffect(() => {
-    setCols(colsMap[media()] ?? 3);
-    calcLayout();
-  });
-
-  onMount(() => calcLayout());
-
-  addEvent('preview-page-change', ({ detail }: CustomEvent) => {
-    console.log(detail);
+  onMount(() => {
+    createEffect(() => {
+      setCols(colsMap[media()] ?? 3);
+      calcLayout();
+    });
   });
 
   return (
-    <>
+    <div>
       <div
-        classList={{
-          'masonry-layout': true,
-          [props.wrapperClass ?? '']: true,
-        }}
+        class={`masonry-layout ${props.wrapperClass}`}
         style={{
           '--col-count': cols(),
           '--col-gap': '24px',
@@ -86,7 +77,7 @@ export default function MasonryLayout(props: Props) {
               <section class="masonry-col grid grid-cols-1 auto-rows-auto gap-y-(--row-gap)">
                 <For each={layout.photos}>
                   {(photo) => (
-                    <div classList={{ "masonry-item": true, [props.itemClass ?? '']: true }} data-index={photo.index}>
+                    <div class={`masonry-item ${props.itemClass}`} data-index={photo.index}>
                       <PhotoItem photo={photo} />
                     </div>
                   )}
@@ -97,9 +88,9 @@ export default function MasonryLayout(props: Props) {
         </div>
       </div>
 
-      <Show when={props.showPreview} keyed>
+      <Show when={props.showPreview}>
         <ScrollPreview wrapper={props.wrapperClass ?? ''} item={props.itemClass ?? ''} photos={props.photos} />
       </Show>
-    </>
+    </div>
   )
 }
