@@ -1,11 +1,15 @@
-import { createEffect, createMemo, createSignal, Index, onCleanup, onMount } from "solid-js";
+import { createMemo, Index, onCleanup, onMount } from "solid-js";
 import useEventBus from "../hooks/useEventBus.ts";
 
-export default function ScrollBar(props: { index: number, photos: Photo[] }) {
+type Props = {
+  index: number,
+  photos: Photo[],
+  dir: ShowDir,
+}
+
+export default function ScrollBar(props: Props) {
   let resizeObserver: ResizeObserver;
   let scrollBarRootRef: HTMLDivElement;
-
-  const [barDir, setBarDir] = createSignal('y');
 
   const maxThumbSize: number = 64;
   const minThumbSize: number = 32;
@@ -23,7 +27,8 @@ export default function ScrollBar(props: { index: number, photos: Photo[] }) {
     const minLength = Math.min(clientWidth, clientHeight);
 
     const isVert = clientWidth > clientHeight;
-    setBarDir(isVert ? 'y' : 'x');
+    const dir = isVert ? 'y' : 'x'
+    emit('show-photo-dir', dir);
 
     const thumbSize = Math.max(minThumbSize, Math.min(maxThumbSize, minLength / 12));
     const thumbGap = Math.max(minThumbGap, Math.min(maxThumbGap, minLength / 45));
@@ -47,11 +52,10 @@ export default function ScrollBar(props: { index: number, photos: Photo[] }) {
   }
 
   const handleToPhoto = (idx: number) => {
-    emit('scrollbar-to-photo', idx);
+    emit('show-photo-index', idx);
   }
 
   onMount(() => {
-    createEffect(() => emit('scrollbar-dir', barDir()));
     createMemo(() => updateScrollBar());
     resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
@@ -71,8 +75,8 @@ export default function ScrollBar(props: { index: number, photos: Photo[] }) {
     <div class="scrollbar-wrapper h-full" ref={el => scrollBarRootRef = el}>
       <ul classList={{
         'scrollbar relative bg-zinc-50/20': true,
-        'h-[calc(var(--scrollbar-size)*1px)] w-full overflow-x-clip': barDir() === 'x',
-        'w-[calc(var(--scrollbar-size)*1px)] h-full overflow-y-clip': barDir() === 'y',
+        'h-[calc(var(--scrollbar-size)*1px)] w-full overflow-x-clip': props.dir === 'x',
+        'w-[calc(var(--scrollbar-size)*1px)] h-full overflow-y-clip': props.dir === 'y',
       }}>
         <Index each={props.photos} fallback={<div>Loading...</div>}>
           {
@@ -80,14 +84,14 @@ export default function ScrollBar(props: { index: number, photos: Photo[] }) {
               <li
                 classList={{
                   'scrollbar-item absolute size-[calc(var(--thumb-size)*1px)] cursor-pointer rounded transition-transform overflow-hidden': true,
-                  'inset-y-0 my-auto origin-bottom': barDir() === 'x',
-                  'inset-x-0 mx-auto origin-right': barDir() === 'y',
+                  'inset-y-0 my-auto origin-bottom': props.dir === 'x',
+                  'inset-x-0 mx-auto origin-right': props.dir === 'y',
                 }}
                 style={{
                   transform: `
                     translate3d(
-                      ${barDir() === 'x' ? `calc((${index} * (var(--thumb-size) + var(--thumb-gap)) + var(--thumb-gap) - var(--scroll-offset)) * 1px)` : 0},
-                      ${barDir() === 'y' ? `calc((${index} * (var(--thumb-size) + var(--thumb-gap)) + var(--thumb-gap) - var(--scroll-offset)) * 1px)` : 0},
+                      ${props.dir === 'x' ? `calc((${index} * (var(--thumb-size) + var(--thumb-gap)) + var(--thumb-gap) - var(--scroll-offset)) * 1px)` : 0},
+                      ${props.dir === 'y' ? `calc((${index} * (var(--thumb-size) + var(--thumb-gap)) + var(--thumb-gap) - var(--scroll-offset)) * 1px)` : 0},
                       0
                     )
                     scale(${props.index === index ? 1.26 : 1})

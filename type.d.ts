@@ -11,3 +11,5 @@ interface Photo {
   location_info?: { [key: string]: any };
   location_map?: string;
 }
+
+type ShowDir = 'x' | 'y';

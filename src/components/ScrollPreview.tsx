@@ -1,5 +1,5 @@
 import { createSignal, onCleanup, onMount, Show } from "solid-js";
-import { getTarget, throttle } from "../utils";
+import { getTarget } from "../utils";
 import useEventBus from "../hooks/useEventBus.ts";
 
 import ScrollBar from "./ScrollBar";
@@ -12,8 +12,8 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
 
   const { addEvent, removeEvent } = useEventBus();
 
-  const [actIdx, setActIdx] = createSignal(0);
-  const [scrollBarDir, setScrollBarDir] = createSignal('h');
+  const [actIdx, setActIdx] = createSignal<number>(0);
+  const [showDir, setShowDir] = createSignal<ShowDir>('y');
 
   const actPhoto = () => props.photos[actIdx()] || {};
 
@@ -29,12 +29,12 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
     scrollPreviewRef.style.backgroundImage = `url(${src}-640w.webp)`;
   }
 
-  const handleScrollBarDir = ({ detail }: CustomEvent<string>) => {
-    setScrollBarDir(detail || 'h');
+  const handlePhotoIndex = ({ detail }: CustomEvent<number>) => {
+    updateSafeIdx(detail);
   }
 
-  const handleToPhoto = ({ detail }: CustomEvent<number>) => {
-    updateSafeIdx(detail);
+  const handlePhotoDir = ({ detail }: CustomEvent<ShowDir>) => {
+    setShowDir(detail);
   }
 
   const handleShow = (e: any) => {
@@ -58,20 +58,9 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
     }
   }
 
-  const handleScroll = throttle((e: WheelEvent) => {
-    if (e.deltaY > 0) updateSafeIdx(actIdx() + 1);
-    if (e.deltaY < 0) updateSafeIdx(actIdx() - 1);
-  }, 100);
-
-  const filterScrollEvent = (e: WheelEvent) => {
-    if (Math.abs(e.deltaY) < 3) return;
-    handleScroll(e);
-  }
-
   const show = (index: number) => {
     scrollPreviewRef?.showPopover();
     document.body.style.overflow = 'hidden';
-    document.addEventListener('wheel', filterScrollEvent);
     document.addEventListener('keyup', handleKeyUp);
     updateSafeIdx(index);
   }
@@ -79,7 +68,6 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
   const hide = () => {
     scrollPreviewRef?.hidePopover();
     document.body.style.overflow = 'auto';
-    document.removeEventListener('wheel', filterScrollEvent);
     document.removeEventListener('keyup', handleKeyUp);
     // 让当前展示图片对应的画廊图片滚动到中心位置
     const selector = `.${props.item}[data-index='${actIdx()}']`;
@@ -94,8 +82,8 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
   }
 
   onMount(() => {
-    addEvent('scrollbar-dir', handleScrollBarDir);
-    addEvent('scrollbar-to-photo', handleToPhoto);
+    addEvent('show-photo-dir', handlePhotoDir);
+    addEvent('show-photo-index', handlePhotoIndex);
     // 服务目标绑定代理事件，用来唤起scroll preview组件
     serviceTargetRoot = document.querySelector(`.${props.wrapper}`) as HTMLDivElement;
     serviceTargetRoot?.addEventListener('click', handleShow);
@@ -103,20 +91,19 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
 
   onCleanup(() => {
     document.body.style.overflow = 'auto';
-    document.removeEventListener('wheel', filterScrollEvent);
     document.removeEventListener('keyup', handleKeyUp);
-    removeEvent('scrollbar-dir', handleScrollBarDir);
-    removeEvent('scrollbar-to-photo', handleToPhoto);
+    removeEvent('show-photo-dir', handlePhotoDir);
+    removeEvent('show-photo-index', handlePhotoIndex);
     // 组件被销毁后，注销服务目标绑定的代理事件
     serviceTargetRoot?.removeEventListener('mousedown', handleShow);
   });
 
   return (
     <div ref={el => scrollPreviewRef = el} popover="manual" class="scroll-preview fixed size-full inset-0 bg-no-repeat bg-center bg-cover bg-white dark:bg-gray-800">
-      <div class="preview-wrapper backdrop-blur-[30px] size-full pt-10 pb-4 px-4 grid grid-cols-1 grid-rows-[1fr_auto] gap-y-4">
+      <div class="preview-wrapper backdrop-blur-[30px] w-screen h-screen">
         {/* photo view */}
-        <div class="preview-main size-full flex justify-center items-center overflow-hidden">
-          <PhotoShow photo={actPhoto()} />
+        <div class="preview-main">
+          <PhotoShow index={actIdx()} photos={props.photos} dir={showDir()} />
         </div>
 
         {/* photo info mix-blend-difference */}
@@ -130,10 +117,10 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
       {/* scroll bar */}
       <div classList={{
         'absolute': true,
-        'inset-y-0 right-0': scrollBarDir() === 'y',
-        'inset-x-0 bottom-0': scrollBarDir() === 'x',
+        'inset-y-0 right-0': showDir() === 'y',
+        'inset-x-0 bottom-0': showDir() === 'x',
       }}>
-        <ScrollBar index={actIdx()} photos={props.photos} />
+        <ScrollBar index={actIdx()} photos={props.photos} dir={showDir()} />
       </div>
     </div>
   )
