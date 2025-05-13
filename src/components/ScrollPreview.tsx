@@ -14,6 +14,8 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
 
   const [actIdx, setActIdx] = createSignal<number>(0);
   const [showDir, setShowDir] = createSignal<ShowDir>('y');
+  // NOTE 不展示则直接切换到对应元素，手动滑动到时候固定设置为不展示避免无效滚动
+  const [showScroll, setShowScroll] = createSignal<boolean>(false);
 
   const actPhoto = () => props.photos[actIdx()] || {};
 

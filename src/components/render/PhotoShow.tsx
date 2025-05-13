@@ -1,4 +1,4 @@
-import {createEffect, Index, Match, onCleanup, onMount, Show, Switch} from "solid-js";
+import { createEffect, Index, onCleanup, onMount, Show } from "solid-js";
 import * as LivePhotoKit from 'livephotoskit';
 import useEventBus from '../../hooks/useEventBus';
 
@@ -11,31 +11,29 @@ type Props = {
 }
 
 function RenderPhotoLive(props: { photo: Photo }) {
-
   let livePhotoRef: HTMLDivElement;
   let livePhotoPlayer: LivePhotoKit.Player;
 
-  createEffect(() => {
-    if (!livePhotoRef) return console.warn('el is null');
-    if (!props.photo) return console.warn('props is null');
+  onMount(() => {
+    createEffect(() => {
+      if (!livePhotoRef) return console.warn('el is null');
+      if (!props.photo) return console.warn('props is null');
 
-    const { src, live_video } = props.photo || {};
+      const { src, live_video } = props.photo || {};
 
-    if (!livePhotoPlayer) {
-      livePhotoPlayer = LivePhotoKit.augmentElementAsPlayer(livePhotoRef, {
-        proactivelyLoadsVideo: true,
-        effectType: 'live',
-      });
-  
-      livePhotoPlayer.addEventListener('error', (ev) => {
-        console.log(ev);
-      });
-    }
+      if (!livePhotoPlayer) {
+        livePhotoPlayer = LivePhotoKit.augmentElementAsPlayer(livePhotoRef, {
+          proactivelyLoadsVideo: true,
+          effectType: 'live',
+          photoSrc: src,
+          videoSrc: live_video,
+        });
 
-    livePhotoPlayer.setProperties({
-      photoSrc: src,
-      videoSrc: live_video,
-    });
+        livePhotoPlayer.addEventListener('error', (ev) => {
+          console.log(ev);
+        });
+      }
+    })
   });
 
   return (
@@ -65,12 +63,13 @@ function RenderPhoto(props: { photo: Photo }) {
 
 export default function PhotoShow(props: Props) {
   let wrapper: HTMLDivElement;
-  let observer: IntersectionObserver;
+
+  let cleanObserver: () => void;
 
   const { emit } = useEventBus();
 
   const setupScrollSnapObserver = (container: HTMLElement) => {
-    observer = new IntersectionObserver(
+    let observer = new IntersectionObserver(
       (entries) => {
         entries.forEach(entry => {
           const { target, isIntersecting } = entry;
@@ -82,19 +81,20 @@ export default function PhotoShow(props: Props) {
       },
       {
         root: container,
-        threshold: 0.8,
+        threshold: 1,
       }
     );
 
     const items = container.querySelectorAll('.photo-show-item') || [];
+
     items.forEach(target => observer.observe(target));
 
-    return observer;
+    return () => observer.disconnect();
   }
 
   onMount(() => {
     if (wrapper) {
-      observer = setupScrollSnapObserver(wrapper);
+      cleanObserver = setupScrollSnapObserver(wrapper);
       createEffect(() => {
         const selector = `.photo-show-item[data-index='${props.index}']`;
         const target = wrapper.querySelector(selector);
@@ -108,7 +108,7 @@ export default function PhotoShow(props: Props) {
   })
 
   onCleanup(() => {
-    observer?.disconnect();
+    cleanObserver?.();
   })
 
   return (
@@ -123,14 +123,12 @@ export default function PhotoShow(props: Props) {
       <Index each={props.photos} fallback={<div>Loading...</div>}>
         {(photo, index: number) => (
           <div class="photo-show-item w-screen h-screen shrink-0 snap-center" data-index={index}>
-            <Switch fallback={<RenderPhoto photo={photo()} />}>
-              <Match when={photo().live_video}>
-                <RenderPhotoLive photo={photo()} />
-              </Match>
-              <Match when={!photo().live_video}>
-                <RenderPhoto photo={photo()} />
-              </Match>
-            </Switch>
+            <Show when={photo().live_video && props.index === index}>
+              <RenderPhotoLive photo={photo()} />
+            </Show>
+            <Show when={!photo().live_video}>
+              <RenderPhoto photo={photo()} />
+            </Show>
           </div>
         )}
       </Index>
