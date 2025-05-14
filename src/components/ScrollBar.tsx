@@ -52,7 +52,8 @@ export default function ScrollBar(props: Props) {
   }
 
   const handleToPhoto = (idx: number) => {
-    emit('show-photo-index', idx);
+    const len = Math.abs(idx - props.index);
+    emit('show-photo-index', { index: idx, scroll: len === 1 });
   }
 
   onMount(() => {

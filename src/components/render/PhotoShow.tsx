@@ -1,13 +1,14 @@
-import { createEffect, Index, onCleanup, onMount, Show } from "solid-js";
+import {createEffect, createMemo, Index, onCleanup, onMount, Show} from "solid-js";
 import * as LivePhotoKit from 'livephotoskit';
 import useEventBus from '../../hooks/useEventBus';
 
 {/* <script is:inline src="https://cdn.apple-livephotoskit.com/lpk/1/livephotoskit.js"></script> */}
 
 type Props = {
-  index: number,
-  photos: Photo[],
-  dir: ShowDir,
+  scroll: boolean;
+  dir: ShowDir;
+  index: number;
+  photos: Photo[];
 }
 
 function RenderPhotoLive(props: { photo: Photo }) {
@@ -75,7 +76,7 @@ export default function PhotoShow(props: Props) {
           const { target, isIntersecting } = entry;
           if (isIntersecting) {
             const { index } = (target as HTMLElement).dataset;
-            emit('show-photo-index', index);
+            emit('show-photo-index', { index, scroll: false });
           }
         })
       },
@@ -92,14 +93,19 @@ export default function PhotoShow(props: Props) {
     return () => observer.disconnect();
   }
 
+  const lazyShow = (index: number) => {
+    return Math.abs(index - props.index) < 3;
+  }
+
   onMount(() => {
     if (wrapper) {
       cleanObserver = setupScrollSnapObserver(wrapper);
-      createEffect(() => {
+      createMemo(() => {
         const selector = `.photo-show-item[data-index='${props.index}']`;
         const target = wrapper.querySelector(selector);
+        console.log('=========== scroll', props.index, props.scroll)
         target?.scrollIntoView({
-          behavior: 'smooth',
+          behavior: props.scroll ? 'smooth' : 'instant',
           block: 'center',
           inline: 'center',
         })
@@ -123,10 +129,10 @@ export default function PhotoShow(props: Props) {
       <Index each={props.photos} fallback={<div>Loading...</div>}>
         {(photo, index: number) => (
           <div class="photo-show-item w-screen h-screen shrink-0 snap-center" data-index={index}>
-            <Show when={photo().live_video && props.index === index}>
+            <Show when={photo().live_video && lazyShow(index)}>
               <RenderPhotoLive photo={photo()} />
             </Show>
-            <Show when={!photo().live_video}>
+            <Show when={!photo().live_video && lazyShow(index)}>
               <RenderPhoto photo={photo()} />
             </Show>
           </div>

@@ -19,8 +19,9 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
 
   const actPhoto = () => props.photos[actIdx()] || {};
 
-  const updateSafeIdx = (idx: number) => {
+  const updateSafeIdx = (idx: number, scroll: boolean) => {
     const safeIdx = Math.max(0, Math.min(props.photos.length - 1, idx));
+    setShowScroll(scroll);
     setActIdx(safeIdx);
     updateViewBg();
   }
@@ -31,8 +32,8 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
     scrollPreviewRef.style.backgroundImage = `url(${src}-640w.webp)`;
   }
 
-  const handlePhotoIndex = ({ detail }: CustomEvent<number>) => {
-    updateSafeIdx(detail);
+  const handlePhotoIndex = ({ detail }: CustomEvent<{ index: number, scroll: boolean }>) => {
+    updateSafeIdx(detail.index, detail.scroll);
   }
 
   const handlePhotoDir = ({ detail }: CustomEvent<ShowDir>) => {
@@ -52,11 +53,11 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
     }
 
     if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-      updateSafeIdx(actIdx() - 1);
+      updateSafeIdx(actIdx() - 1, true);
     }
 
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-      updateSafeIdx(actIdx() + 1);
+      updateSafeIdx(actIdx() + 1, true);
     }
   }
 
@@ -64,7 +65,7 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
     scrollPreviewRef?.showPopover();
     document.body.style.overflow = 'hidden';
     document.addEventListener('keyup', handleKeyUp);
-    updateSafeIdx(index);
+    updateSafeIdx(index, false);
   }
 
   const hide = () => {
@@ -105,7 +106,12 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
       <div class="preview-wrapper backdrop-blur-[30px] w-screen h-screen">
         {/* photo view */}
         <div class="preview-main">
-          <PhotoShow index={actIdx()} photos={props.photos} dir={showDir()} />
+          <PhotoShow
+            scroll={showScroll()}
+            dir={showDir()}
+            index={actIdx()}
+            photos={props.photos}
+          />
         </div>
 
         {/* photo info mix-blend-difference */}
@@ -122,7 +128,11 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
         'inset-y-0 right-0': showDir() === 'y',
         'inset-x-0 bottom-0': showDir() === 'x',
       }}>
-        <ScrollBar index={actIdx()} photos={props.photos} dir={showDir()} />
+        <ScrollBar
+          dir={showDir()}
+          index={actIdx()}
+          photos={props.photos}
+        />
       </div>
     </div>
   )
