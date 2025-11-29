@@ -2,8 +2,6 @@ import {createEffect, createMemo, Index, onCleanup, onMount, Show} from "solid-j
 import * as LivePhotoKit from 'livephotoskit';
 import useEventBus from '../../hooks/useEventBus';
 
-{/* <script is:inline src="https://cdn.apple-livephotoskit.com/lpk/1/livephotoskit.js"></script> */}
-
 type Props = {
   scroll: boolean;
   dir: ShowDir;
@@ -11,51 +9,66 @@ type Props = {
   photos: Photo[];
 }
 
-function RenderPhotoLive(props: { photo: Photo }) {
+function RenderPhotoLive(props: { photo: Photo, show: boolean }) {
   let livePhotoRef: HTMLDivElement;
   let livePhotoPlayer: LivePhotoKit.Player;
+  let init = false;
 
   onMount(() => {
     createEffect(() => {
-      if (!livePhotoRef) return console.warn('el is null');
-      if (!props.photo) return console.warn('props is null');
+      const { photo, show } = props;
+      if (photo && show && livePhotoRef && !init) {
 
-      const { src, live_video } = props.photo || {};
+        if (!livePhotoPlayer) {
+          livePhotoPlayer = LivePhotoKit.augmentElementAsPlayer(livePhotoRef, {
+            proactivelyLoadsVideo: true,
+            effectType: 'live',
+            photoSrc: photo.src,
+            videoSrc: photo.live_video,
+          });
 
-      if (!livePhotoPlayer) {
-        livePhotoPlayer = LivePhotoKit.augmentElementAsPlayer(livePhotoRef, {
-          proactivelyLoadsVideo: true,
-          effectType: 'live',
-          photoSrc: src,
-          videoSrc: live_video,
-        });
+          livePhotoPlayer.addEventListener('error', (ev) => {
+            console.log(ev);
+          });
+        }
 
-        livePhotoPlayer.addEventListener('error', (ev) => {
-          console.log(ev);
-        });
+        init = true;
       }
     })
   });
 
   return (
-    <div ref={el => livePhotoRef = el} class="preview-image" style={{ width: '100%', height: '100%' }}></div>
+    <div ref={el => livePhotoRef = el} class="preview-image size-full"></div>
   )
 }
 
-function RenderPhoto(props: { photo: Photo }) {
+function RenderPhoto(props: { photo: Photo, show: boolean }) {
+  let imgRef: HTMLImageElement;
+  let init = false;
+
+  onMount(() => {
+    createEffect(() => {
+      const { photo, show } = props;
+      if (photo && show && imgRef && !init) {
+        imgRef.src = photo.src;
+        init = true;
+      }
+    })
+  })
+
   return (
     <Show when={props.photo}>
       <figure class="size-full flex justify-center items-center">
         <img
+          ref={el => imgRef = el}
           alt={props.photo.name}
-          src={props.photo.src}
           width={props.photo.info?.width}
           height={props.photo.info?.height}
           style={{
             "background-color": props.photo.color,
             "background-image": `url(${props.photo.src}-tiny.bmp)`
           }}
-          class="preview-image object-contain block w-auto h-auto max-w-full max-h-full bg-no-repeat bg-cover bg-center"
+          class="preview-image object-contain block w-auto h-auto max-w-full max-h-full shadow-lg rounded-lg bg-no-repeat bg-cover bg-center"
         />
       </figure>
     </Show>
@@ -128,13 +141,26 @@ export default function PhotoShow(props: Props) {
     >
       <Index each={props.photos} fallback={<div>Loading...</div>}>
         {(photo, index: number) => (
-          <div class="photo-show-item w-screen h-screen shrink-0 snap-center" data-index={index}>
-            <Show when={photo().live_video && lazyShow(index)}>
-              <RenderPhotoLive photo={photo()} />
-            </Show>
-            <Show when={!photo().live_video && lazyShow(index)}>
-              <RenderPhoto photo={photo()} />
-            </Show>
+          <div
+            data-index={index}
+            data-src={photo().src}
+            classList={{
+              'bg-no-repeat bg-center bg-cover': true,
+              'photo-show-item w-screen h-screen shrink-0 snap-center': true,
+            }}
+            style={{
+              "background-color": photo().color,
+              "background-image": `url(${photo().src}-640w.webp)`
+            }}
+          >
+            <div class="size-full p-12 backdrop-blur-[30px]">
+              <Show when={photo().live_video}>
+                <RenderPhotoLive photo={photo()} show={lazyShow(index)} />
+              </Show>
+              <Show when={!photo().live_video}>
+                <RenderPhoto photo={photo()} show={lazyShow(index)} />
+              </Show>
+            </div>
           </div>
         )}
       </Index>

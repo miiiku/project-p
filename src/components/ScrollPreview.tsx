@@ -27,9 +27,9 @@ export default function ScrollPreview(props: { wrapper: string, item: string, ph
   }
 
   const updateViewBg = () => {
-    const { color, src } = actPhoto();
-    scrollPreviewRef.style.backgroundColor = color;
-    scrollPreviewRef.style.backgroundImage = `url(${src}-640w.webp)`;
+    // const { color, src } = actPhoto();
+    // scrollPreviewRef.style.backgroundColor = color;
+    // scrollPreviewRef.style.backgroundImage = `url(${src}-640w.webp)`;
   }
 
   const handlePhotoIndex = ({ detail }: CustomEvent<{ index: number, scroll: boolean }>) => {
