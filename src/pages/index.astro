@@ -1,5 +1,10 @@
 ---
+import { PhotoRender } from "@/components/solid/photo";
 import Layout from "../layouts/Layout.astro";
+
+const response = await fetch("https://qn.sukoshi.xyz/project-p/photos.json");
+const data = await response.json();
+const photos = data || [];
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
@@ -7,5 +12,9 @@ import Layout from "../layouts/Layout.astro";
 
 <Layout>
   <div class="text-center py-3">hello antler</div>
+  <PhotoRender
+    photos={photos}
+    client:only="solid-js"
+  />
 </Layout>
 
