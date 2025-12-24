@@ -4,6 +4,7 @@ import { usePhotoContext } from "./photo-provider";
 
 import PhotoThumbBar from "./photo-thumb-bar";
 import PhotoGalleryList from "./photo-gallery-list";
+import PhotoGalleryExif from "./photo-gallery-exif";
 
 export default function PhotoGallery() {
   const { store, hideGallery } = usePhotoContext();
@@ -31,13 +32,8 @@ export default function PhotoGallery() {
         popover="manual"
         class="fixed size-full inset-0 bg-white dark:bg-gray-800"
       >
-        <div class="size-full">
-          {/* photos scroll content */}
-          <PhotoGalleryList />
-
-          {/* photo exif info */}
-          <div></div>
-        </div>
+        {/* photos scroll content */}
+        <PhotoGalleryList />
 
         {/* photos thumb bar */}
         <PhotoThumbBar />

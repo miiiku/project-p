@@ -1,6 +1,7 @@
 import { createEffect, Index, onCleanup, onMount, Show } from "solid-js"
 import * as LivePhotoKit from 'livephotoskit';
 import { usePhotoContext } from "./photo-provider"
+import PhotoGalleryExif from "./photo-gallery-exif";
 
 function RenderLivePhoto(props: { photo: Photo, idx: number }) {
   const { store } = usePhotoContext()
@@ -32,7 +33,7 @@ function RenderLivePhoto(props: { photo: Photo, idx: number }) {
   })
 
   return (
-    <div ref={el => livePhotoRef = el} class="size-full"></div>
+    <div ref={el => livePhotoRef = el} class="size-full overflow-hidden"></div>
   )
 }
 
@@ -54,7 +55,7 @@ function RenderStillPhoto(props: { photo: Photo, idx: number }) {
 
   return (
     <Show when={props.photo}>
-      <figure class="size-full flex justify-center items-center">
+      <figure class="size-full flex justify-center items-center overflow-hidden">
         <img
           ref={el => imgRef = el}
           alt={props.photo.name}
@@ -152,13 +153,39 @@ export default function PhotoGalleryList() {
               }}
             />
 
-            <div class="absolute inset-0 size-full p-12">
+            <div
+              class="p-12 flex flex-col gap-4"
+              style={{
+                "--grid-gutter-col": "clamp(6px,3dvh,48px)",
+                "--grid-gutter-row": "clamp(6px,2dvw,50px)",
+              }}
+              classList={{
+                "absolute inset-0 size-full": true,
+                "grid grid-cols-[var(--grid-gutter-col)_minmax(0,1fr)_var(--grid-gutter-col)]": true,
+                "grid grid-rows-[var(--grid-gutter-row)_minmax(0,1fr)_var(--grid-gutter-row)]": !photo().exif,
+                // "grid-rows-[var(--grid-gutter-row)_minmax(0,1fr)_var(--grid-gutter-row)]": photo().exif,
+              }}
+            >
+              <div></div>
+              <div></div>
+              <div></div>
+
+              <div></div>
               <Show
                 when={photo().live_video}
                 fallback={<RenderStillPhoto idx={index} photo={photo()} />}
               >
                 <RenderLivePhoto idx={index} photo={photo()} />
               </Show>
+              <div></div>
+              
+              <div></div>
+              <div></div>
+              <div></div>
+
+              {/* <Show when={photo().exif}>
+                <PhotoGalleryExif photo={photo()} />
+              </Show> */}
             </div>
           </div>
         )}
