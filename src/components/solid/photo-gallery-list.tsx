@@ -76,7 +76,7 @@ export default function PhotoGalleryList() {
   let listRefs: HTMLDivElement[] = [];
   let cleanObserver: () => void;
 
-  const { store } = usePhotoContext()
+  const { store, updateTarget } = usePhotoContext()
 
   const setupScrollSnapObserver = (container: HTMLElement) => {
     let observer = new IntersectionObserver(
@@ -86,7 +86,10 @@ export default function PhotoGalleryList() {
           if (isIntersecting) {
             const { index } = (target as HTMLElement).dataset;
             // 手动滚动 - 更新target
-            console.log('intersecting', index);
+            const targetIndex = Number(index)
+            if (store.target !== targetIndex) {
+              updateTarget(targetIndex)
+            }
           }
         })
       },
@@ -136,12 +139,12 @@ export default function PhotoGalleryList() {
           <div
             ref={item => listRefs.push(item)}
             data-index={index}
-            class="relative size-full overflow-hidden"
+            class="relative size-full shrink-0 snap-center overflow-hidden"
           >
             <div
               classList={{
-                "bg-no-repeat bg-center bg-cover shrink-0 blur-2xl snap-center": true,
-                "absolute inset-0 size-full origin-center scale-110": true,
+                "bg-no-repeat bg-center bg-cover blur-2xl": true,
+                "size-full origin-center scale-110": true,
               }}
               style={{
                 "background-color": photo().color,
@@ -149,7 +152,7 @@ export default function PhotoGalleryList() {
               }}
             />
 
-            <div class="relative size-full p-12">
+            <div class="absolute inset-0 size-full p-12">
               <Show
                 when={photo().live_video}
                 fallback={<RenderStillPhoto idx={index} photo={photo()} />}

@@ -1,4 +1,4 @@
-import { createContext, createEffect, useContext } from "solid-js"
+import { createContext, useContext } from "solid-js"
 import { createStore } from "solid-js/store"
 
 export interface IPhotoStore {
@@ -46,8 +46,6 @@ export function PhotoProvider(props: { children: any, photos: Photo[], target?: 
     } else {
       console.warn('Invalid target index:', target);
     }
-
-    console.log('updateTarget called with:', store);
   }
 
   const showGallery = (target?: number) => {
@@ -58,7 +56,6 @@ export function PhotoProvider(props: { children: any, photos: Photo[], target?: 
   }
 
   const hideGallery = () => {
-    console.log("=======hide gallery")
     setStore('galleryDisplay', false);
   }
 
