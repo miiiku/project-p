@@ -4,7 +4,6 @@ import { usePhotoContext } from "./photo-provider";
 
 import PhotoThumbBar from "./photo-thumb-bar";
 import PhotoGalleryList from "./photo-gallery-list";
-import PhotoGalleryExif from "./photo-gallery-exif";
 
 export default function PhotoGallery() {
   const { store, hideGallery } = usePhotoContext();
