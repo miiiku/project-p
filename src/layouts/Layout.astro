@@ -3,6 +3,7 @@ import "../styles/var.css";
 import "../styles/global.css";
 import Navbar from "../components/Navbar.astro";
 import BackgroundImage from "../components/BackgroundImage.astro";
+import Analytics from "@vercel/analytics/astro";
 ---
 
 <!doctype html>
@@ -34,6 +35,7 @@ import BackgroundImage from "../components/BackgroundImage.astro";
       
       <div class="col-start-4 col-end-5 size-full"></div>
     </div>
+    <Analytics />
   </body>
 </html>
 

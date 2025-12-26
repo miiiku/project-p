@@ -162,8 +162,7 @@ export default function PhotoGalleryList() {
               classList={{
                 "absolute inset-0 size-full": true,
                 "grid grid-cols-[var(--grid-gutter-col)_minmax(0,1fr)_var(--grid-gutter-col)]": true,
-                "grid grid-rows-[var(--grid-gutter-row)_minmax(0,1fr)_var(--grid-gutter-row)]": !photo().exif,
-                // "grid-rows-[var(--grid-gutter-row)_minmax(0,1fr)_var(--grid-gutter-row)]": photo().exif,
+                "grid grid-rows-[var(--grid-gutter-row)_minmax(0,1fr)_var(--grid-gutter-row)]": true,
               }}
             >
               <div></div>
@@ -171,21 +170,24 @@ export default function PhotoGalleryList() {
               <div></div>
 
               <div></div>
-              <Show
-                when={photo().live_video}
-                fallback={<RenderStillPhoto idx={index} photo={photo()} />}
-              >
-                <RenderLivePhoto idx={index} photo={photo()} />
-              </Show>
+              <div class="size-full flex flex-col gap-5">
+                <Show
+                  when={photo().live_video}
+                  fallback={<RenderStillPhoto idx={index} photo={photo()} />}
+                >
+                  <RenderLivePhoto idx={index} photo={photo()} />
+                </Show>
+
+                <Show when={photo().exif}>
+                  <PhotoGalleryExif photo={photo()} />
+                </Show>
+              </div>
               <div></div>
               
               <div></div>
               <div></div>
               <div></div>
 
-              {/* <Show when={photo().exif}>
-                <PhotoGalleryExif photo={photo()} />
-              </Show> */}
             </div>
           </div>
         )}
