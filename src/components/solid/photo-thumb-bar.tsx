@@ -73,14 +73,14 @@ export default function PhotoThumbBar() {
     <div
       ref={el => containerRef = el}
       classList={{
-        'absolute': true,
+        'absolute z-[999]': true,
         'inset-y-0 right-0': dir() === 'y',
         'inset-x-0 bottom-0': dir() === 'x',
       }}
     >
       <ul
         classList={{
-          'thumb-bar relative bg-zinc-50/20': true,
+          'relative bg-zinc-50/20 backdrop-blur-[8px]': true,
           'h-[calc(var(--thumb-bar-size)*1px)] w-full overflow-x-clip': dir() === 'x',
           'w-[calc(var(--thumb-bar-size)*1px)] h-full overflow-y-clip': dir() === 'y',
         }}
@@ -90,7 +90,7 @@ export default function PhotoThumbBar() {
             (photo, index) => (
               <li
                 classList={{
-                  'thumb-bar-item absolute size-[calc(var(--thumb-size)*1px)] cursor-pointer rounded transition-transform overflow-hidden': true,
+                  'absolute size-[calc(var(--thumb-size)*1px)] cursor-pointer rounded transition-transform overflow-hidden': true,
                   'inset-y-0 my-auto origin-bottom': dir() === 'x',
                   'inset-x-0 mx-auto origin-right': dir() === 'y',
                 }}
@@ -107,7 +107,7 @@ export default function PhotoThumbBar() {
                 onClick={() => handleToPhoto(index)}
               >
                 <img
-                  class="thumb-bar-img block w-full h-full object-cover"
+                  class="block w-full h-full object-cover"
                   src={`${photo().src}-120w.webp`}
                   alt={photo().name}
                 />

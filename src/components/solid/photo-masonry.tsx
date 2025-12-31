@@ -10,10 +10,10 @@ interface IMasonryLayoutItem {
 
 const COLS_MAP: Record<string, number> = {
   'sm': 2,
-  'md': 2,
-  'lg': 3,
-  'xl': 3,
-  '2xl': 4,
+  'md': 3,
+  'lg': 4,
+  'xl': 4,
+  '2xl': 5,
 }
 
 export default function PhotoMasonry() {
@@ -63,8 +63,8 @@ export default function PhotoMasonry() {
     <div
       style={{
         '--col-count': cols(),
-        '--col-gap': '24px',
-        '--row-gap': '24px',
+        '--col-gap': 'clamp(12px,1dvw,48px)',
+        '--row-gap': 'clamp(12px,1dvh,48px)',
       }}
     >
       <div class="grid grid-cols-[repeat(var(--col-count),minmax(0,1fr))] gap-x-(--col-gap) items-start">

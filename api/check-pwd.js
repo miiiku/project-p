@@ -1,6 +1,6 @@
 export const config = {
   api: {
-    bodyParser: true,  // 允许解析 POST body
+    bodyParser: true, // 允许解析 POST body
   },
 };
 
@@ -11,8 +11,12 @@ export default function handler(req, res) {
 
   const { pwd } = req.body;
 
-  // 只存在服务器端！
-  const CORRECT_PWD = 'antler_project_p';
+  // 从环境变量读取关键词
+  const CORRECT_PWD = process.env.VITE_PWD;
+
+  if (!CORRECT_PWD) {
+    return res.status(500).json({ error: 'Server configuration error' });
+  }
 
   if (pwd && pwd.trim() === CORRECT_PWD) {
     res.status(200).json({ success: true });

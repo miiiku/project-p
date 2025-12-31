@@ -2,7 +2,6 @@
 import Layout from "../../layouts/Layout.astro";
 ---
 
-
 <Layout>
   <div class="flex gap-4 justify-center p-4">
     <button id="run">run</button>
@@ -23,7 +22,7 @@ import Layout from "../../layouts/Layout.astro";
     "https://qn.sukoshi.xyz/project-p/photos/IMG_7489.jpeg",
   ];
 
-  const amapKey = import.meta.env.PUBLIC_AMAP_KEY;
+  const amapKey = import.meta.env.VITE_AMAP_KEY;
 
   let dataResult: any[] = [];
   let dataMaps: [string, string][] = [];
