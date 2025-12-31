@@ -7,6 +7,7 @@ import Layout from "../../layouts/Layout.astro";
   <div class="flex gap-4 justify-center p-4">
     <button id="run">run</button>
     <button id="download">downlaod maps</button>
+    <button id="check">check</button>
   </div>
   <div class="w-[80vw] h-[70vh] p-6 mx-auto rounded bg-stone-400 overflow-y-auto">
     <pre id="output-map"></pre>
@@ -19,14 +20,7 @@ import Layout from "../../layouts/Layout.astro";
   import { get, gpsCoordinateConverter } from '../../utils/index'
    
   const datas: any[] = [
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4532.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_4889.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_5806.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_5873.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_5899.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_6416.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_6419.jpeg",
-    "https://qn.sukoshi.xyz/project-p/photos/IMG_6440.jpeg",
+    "https://qn.sukoshi.xyz/project-p/photos/IMG_7489.jpeg",
   ];
 
   const amapKey = import.meta.env.PUBLIC_AMAP_KEY;
@@ -199,4 +193,23 @@ import Layout from "../../layouts/Layout.astro";
 
   document.querySelector("#run")?.addEventListener('click', run);
   document.querySelector("#download")?.addEventListener('click', download);
+  document.querySelector("#check")?.addEventListener('click', async () => {
+    try {
+      const res = await fetch('/api/check-pwd', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pwd: 'antler_project_p' })
+      })
+
+      const data = await res.json()
+
+      if (data.success) {
+        alert('关键词正确')
+      }
+    } catch (err) {
+      console.error(err)
+    } finally {
+    }
+  });
+</script>
 </script>

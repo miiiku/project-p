@@ -53,7 +53,6 @@ export default function PhotoMasonry() {
   };
 
   onMount(() => {
-    console.log(store.photos)
     createEffect(() => {
       setCols(COLS_MAP[media()] ?? 2);
       calcLayout();

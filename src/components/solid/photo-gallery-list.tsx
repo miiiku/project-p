@@ -1,6 +1,7 @@
 import * as LivePhotoKit from 'livephotoskit';
 import { createEffect, Index, onCleanup, onMount, Show } from "solid-js"
 import { usePhotoContext } from "./photo-provider"
+import Popover from '../Popover';
 
 function RenderLivePhoto(props: { photo: Photo, idx: number }) {
   const { store } = usePhotoContext()
@@ -183,19 +184,14 @@ function PhotoGalleryExif(props: { photo: Photo }) {
             xmlns="http://www.w3.org/2000/svg"
             width="20"
             height="20"
-            viewBox="0 0 24 24"
-            fill="none"
+            viewBox="0 0 1024 1024"
+            fill="currentColor"
             stroke="currentColor"
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
           >
-            <path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
-            <path d="M12 12m-8 0a8 8 0 1 0 16 0a8 8 0 1 0 -16 0" />
-            <path d="M12 2l0 2" />
-            <path d="M12 20l0 2" />
-            <path d="M20 12l2 0" />
-            <path d="M2 12l2 0" />
+            <path d="M715.264 660.288l5.76 0.576c108.928 19.648 197.504 85.056 197.504 161.28 0 108.16-182.912 181.312-405.312 181.312s-405.376-73.152-405.376-181.312c0-80.32 100.928-147.392 200.96-161.536a32 32 0 1 1 8.96 63.36c-72.32 10.24-145.92 59.136-145.92 98.176 0 56.768 151.36 117.312 341.376 117.312 189.952 0 341.312-60.544 341.312-117.312 0-37.184-62.72-83.456-144.896-98.304a32 32 0 1 1 11.392-62.976z m8.832-516.608a328.32 328.32 0 0 1 25.472 435.84l-180.16 227.84a69.312 69.312 0 0 1-108.8 0l-180.096-227.84a328.32 328.32 0 0 1 25.408-435.84 295.68 295.68 0 0 1 418.176 0z m-372.928 45.248a264.32 264.32 0 0 0-20.48 350.912l180.16 227.84 0.896 0.896a5.312 5.312 0 0 0 7.488-0.832l180.096-227.904a264.32 264.32 0 0 0-20.48-350.912 231.68 231.68 0 0 0-327.68 0z m162.56 31.744a149.312 149.312 0 1 1 0 298.624 149.312 149.312 0 0 1 0-298.624z m0 64a85.312 85.312 0 1 0 0 170.624 85.312 85.312 0 0 0 0-170.624z" fill="currentColor"></path>
           </svg>
 
           <button
@@ -212,11 +208,11 @@ function PhotoGalleryExif(props: { photo: Photo }) {
         </aside>
       </Show>
 
-      {/* <Show when={photo()?.location_map}>
+      <Show when={photo()?.location_map}>
         <Popover id="location_map_popover">
           <img src={photo().location_map} class="w-auto h-40 block" alt="Location" />
         </Popover>
-      </Show> */}
+      </Show>
     </div>
   )
 }
